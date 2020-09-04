@@ -2,9 +2,10 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
+import 'materialize-css/dist/js/materialize.min'
 import Vuelidate from "vuelidate";
+import messagePlugin from "./utils/message.plugin";
 Vue.config.productionTip = false
-
 import firebase from "firebase/app";
 import 'firebase/auth';
 import 'firebase/database';
@@ -12,7 +13,7 @@ import 'firebase/database';
 
 
 Vue.use(Vuelidate);
-
+Vue.use(messagePlugin)
 
 
 let firebaseConfig = {
