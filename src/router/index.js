@@ -10,6 +10,11 @@ Vue.use(VueRouter)
     name: 'Home',
     component: Home
   },
+  {
+    path: '/profile',
+    name: 'Profile',
+    component: () => import('../views/Profile')
+  },
 
 ]
 
