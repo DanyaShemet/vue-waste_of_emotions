@@ -1,19 +1,50 @@
 <template>
-    <Login/>
+    <div>
+        <ButtonsLog/>
+        <button @click="googleHandler">Гугл</button>
+    </div>
+
 </template>
 
 <script>
     // @ is an alias to /src
-    import Login from '@/components/ButtonsLog'
+    import ButtonsLog from '@/components/intro/ButtonsLog'
     import messages from "../utils/messages";
+    import firebase from "firebase/app";
+
     export default {
-        name: 'Home',
+        name: 'home',
         components: {
-            Login
+            ButtonsLog
         },
         computed: {
             error() {
                 return this.$store.getters.error
+            }
+        },
+        methods: {
+            async googleHandler(){
+                let provider = new firebase.auth.GoogleAuthProvider();
+                let isAuthentication = false;
+                try {
+                    let result = await firebase.auth().signInWithPopup(provider)
+                    var token = result.credential.accessToken;
+                    var user = result.user;
+                    isAuthentication = true
+                    let formDataGoogle = {
+                        email: user.email,
+                        password: user.uid,
+                        name: user.displayName
+                    }
+                    await this.$store.dispatch('registerGoogleUser', formDataGoogle)
+                    this.$router.push('/main')
+
+                }catch (e) {
+                    var errorCode = error.code;
+                    var errorMessage = error.message;
+                    var email = error.email;
+                    var credential = error.credential;
+                }
             }
         },
         mounted() {
@@ -21,11 +52,9 @@
             if (messages[this.$route.query.message]){
                 this.$message(messages[this.$route.query.message])
             }
-
         },
         watch: {
             error(fbError){
-                console.log(fbError)
                 this.$error(messages[fbError.code] || 'Что то пошло не так')
             }
         }

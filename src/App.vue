@@ -1,7 +1,7 @@
 <template>
     <div id="app">
         <component :is="layout">
-            <router-view></router-view>
+            <router-view />
         </component>
     </div>
 </template>
@@ -11,15 +11,13 @@
     import HomeLayout from './layouts/HomeLayout'
 
     export default {
-
-        components: {MainLayout, HomeLayout},
         computed: {
             layout() {
-                return (this.$route.meta.layout + '-layout' || '')
+                return (this.$route.meta.layout + '-layout')
             }
-        }
-
-    }
+        },
+        components: {MainLayout, HomeLayout},
+    };
 
 </script>
 

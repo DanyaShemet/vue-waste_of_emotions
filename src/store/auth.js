@@ -26,6 +26,18 @@ export default {
                 throw e
             }
         },
+        async registerGoogleUser({dispatch, commit}, {email, password, name}){
+            try{
+                await firebase.database().ref(`/users/${password}/info`).set({
+                    emotions: 100,
+                    name
+                })
+            }catch (e) {
+                commit('setError', e)
+                throw e
+            }
+
+        },
         getUid(){
             const user = firebase.auth().currentUser
             return user ? user.uid : null

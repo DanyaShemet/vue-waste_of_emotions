@@ -20,6 +20,7 @@
 
 <script>
     export default{
+        name: 'main-layout',
         methods: {
             async logout(){
                 await this.$store.dispatch('logout')

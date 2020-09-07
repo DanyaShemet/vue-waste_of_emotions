@@ -1,6 +1,9 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
+import Main from '../views/Main.vue'
+import Categories from '../views/Categories.vue'
+import Statistic from '../views/Statistic.vue'
 import * as firebase from "firebase";
 
 Vue.use(VueRouter)
@@ -14,21 +17,21 @@ const routes = [
     },
     {
         path: '/main',
-        name: 'Main',
+        name: 'Profile',
         meta: {layout: "main", auth: true},
-        component: () => import('../views/Main')
+        component: Main,
     },
     {
         path: '/categories',
-        name: 'Categories',
+        name: 'categories',
         meta: {layout: "main", auth: true},
-        component: () => import('../views/Categories')
+        component: Categories
     },
     {
         path: '/statistic',
-        name: 'Statistic',
+        name: 'statistic',
         meta: {layout: "main", auth: true},
-        component: () => import('../views/Statistic')
+        component: Statistic
     },
 
 ]

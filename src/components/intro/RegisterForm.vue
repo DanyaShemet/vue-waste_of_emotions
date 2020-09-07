@@ -1,6 +1,6 @@
 <template>
     <div class="row">
-        <h2>Login</h2>
+        <h2>Register</h2>
         <form class="col s8" @submit.prevent="submitHandler">
             <div class="row">
                 <div class="input-field col s12">
@@ -28,22 +28,37 @@
                 </div>
             </div>
 
+            <div class="input-field">
+                <input
+                        id="name"
+                        type="text"
+                        v-model.trim="name"
+                        :class="{invalid: ($v.name.$dirty && !$v.name.required)}"
+                >
+                <label for="name">Name</label>
+                <small class="helper-text invalid" v-if="$v.name.$dirty && !$v.name.required">Введите имя</small>
+            </div>
+
             <button class="waves-effect waves-light btn">button</button>
         </form>
+
     </div>
 </template>
 
 <script>
     import {email, required, minLength} from 'vuelidate/lib/validators'
-
+    import firebase from "firebase/app";
     export default {
+        name: 'register',
         data: () => ({
             email: '',
             password: '',
+            name: ''
         }),
         validations: {
             email: {email, required},
             password: {required, minLength: minLength(8)},
+            name: {required}
         },
         methods: {
             async submitHandler() {
@@ -53,17 +68,14 @@
                 }
                 const formData = {
                     email: this.email,
-                    password: this.password
+                    password: this.password,
+                    name: this.name
                 };
-
                 try {
-                    await this.$store.dispatch('login', formData)
-                    this.$router.push('/profile')
-                } catch (e) {
-                }
-
+                    await this.$store.dispatch('registerUser', formData)
+                    this.$router.push('/main')
+                } catch (e) {}
             },
-
         },
         mounted() {
 

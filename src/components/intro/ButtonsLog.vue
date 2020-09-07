@@ -9,10 +9,10 @@
 
 
 <script>
-import LoginForm from "@/components/LoginForm";
-import RegisterForm from "@/components/RegisterForm";
+import LoginForm from "@/components/intro/LoginForm";
+import RegisterForm from "@/components/intro/RegisterForm";
   export default {
-
+    name: 'buttons',
     data: () => ({
       isLoginForm: false,
       isRegisterForm: false,
