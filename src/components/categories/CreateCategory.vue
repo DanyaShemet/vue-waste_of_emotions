@@ -47,6 +47,7 @@
         },
         validations: {
             title: {required},
+            icon: {required}
         },
         mounted() {
             M.FormSelect.init(this.$refs.select)
