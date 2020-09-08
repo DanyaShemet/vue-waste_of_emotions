@@ -6,13 +6,10 @@
             <div class="input-field col s12">
                 <select ref="select" v-model="icon">
                     <option value="" disabled selected>Виберите иконку</option>
-                    <option value="brightness_3"><i class="material-icons">brightness_3</i></option>
-                    <option value="accessibility"><i class="material-icons">accessibility</i></option>
-                    <option value="audiotrack"><i class="material-icons">audiotrack</i></option>
-                    <option value="child_care"><i class="material-icons">child_care</i></option>
-                    <option value="directions_run"><i class="material-icons">directions_run</i></option>
+                  <option v-for="icon in icons" :value="icon"><i class="material-icons">{{icon}}</i> </option>
                 </select>
             </div>
+          <span><i class="material-icons">{{icon}}</i></span>
             <button>Создать категорию</button>
         </form>
     </div>
@@ -22,6 +19,7 @@
     import {required} from "vuelidate/lib/validators";
 
     export default {
+      props: ['icons'],
         data: () => ({
             title: '',
             icon: '',
@@ -39,7 +37,7 @@
                         icon: this.icon
                     });
                     this.title =  ''
-                    this.icon = ''
+                  this.$refs.select.value = ''
 
                     this.$v.$reset()
                     this.$message('Категория была создана')

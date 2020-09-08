@@ -7,8 +7,8 @@
       <button @click="deleteCategory" :data-id=category.id>Удалить</button>
       <button @click="showEditableForm" :data-id=category.id>Редактировать</button>
     </div>
-    <CreateCategory @created="addNewCategory"/>
-    <EditCategory v-if="isEditable" :categoryName="editableCategory.title" :categoryIcon="editableCategory.icon"/>
+    <CreateCategory @created="addNewCategory" :icons="categoryIcons"/>
+    <EditCategory v-if="isEditable" :categoryName="editableCategory.title" :categoryIcon="editableCategory.icon" :icons="categoryIcons"/>
   </div>
 </template>
 
@@ -18,6 +18,7 @@ import EditCategory from '@/components/categories/EditCategory'
 
 export default {
   data: () => ({
+    categoryIcons: ['brightness_3', 'accessibility' ,'audiotrack', 'child_care','directions_run'],
     categories: [],
     isEditable: false,
     editableCategory: {}

@@ -6,17 +6,14 @@
 
 <!--    <i class="material-icons">{{$props.category.icon}}</i>-->
     <form @submit.prevent="updateCategory">
-      <input type="text" placeholder="Введите название категории" v-model="title">
+      <input type="text" placeholder="Введите название категории" >
       <div class="input-field col s12">
-        <select ref="selectedit" v-model="icon">
+        <select ref="selectedit" >
           <option value="" disabled>Виберите иконку</option>
-          <option :value=icon selected> <i class="material-icons">{{icon}}</i></option>
-          <option value="brightness_3"><i class="material-icons">brightness_3</i></option>
-          <option value="audiotrack"><i class="material-icons">audiotrack</i></option>
-          <option value="child_care"><i class="material-icons">child_care</i></option>
-          <option value="directions_run"  ><i class="material-icons">directions_run</i></option>
+          <option v-for="icon in icons" :value="icon" :selected="icon === $props.categoryIcon"><i class="material-icons">{{icon}}</i></option>
         </select>
       </div>
+      <span><i class="material-icons">{{$props.categoryIcon}}</i></span>
       <button>Обновить</button>
     </form>
   </div>
@@ -24,11 +21,11 @@
 
 <script>
 export default {
-  props: ['categoryName', 'categoryIcon'],
+  props: ['categoryName', 'categoryIcon', 'icons'],
   data: () => ({
     select: null,
     icon: '',
-    title: this.categoryName
+    title: ''
   }),
 
   methods: {
@@ -47,6 +44,7 @@ export default {
   mounted() {
     this.select = M.FormSelect.init(this.$refs.selectedit)
     M.updateTextFields()
+
   },
   destroyed() {
     if (this.select && this.select.destroy) {
