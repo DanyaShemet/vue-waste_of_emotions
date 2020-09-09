@@ -36,14 +36,14 @@
                         password: user.uid,
                         name: user.displayName
                     }
-                    await this.$store.dispatch('registerGoogleUser', formDataGoogle)
+                    await this.$store.dispatch('loginGoogleUser', formDataGoogle)
                     this.$router.push('/main')
 
                 }catch (e) {
-                    var errorCode = error.code;
-                    var errorMessage = error.message;
-                    var email = error.email;
-                    var credential = error.credential;
+                    var errorCode = e.code;
+                    var errorMessage = e.message;
+                    var email = e.email;
+                    var credential = e.credential;
                 }
             }
         },

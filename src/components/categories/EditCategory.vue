@@ -1,66 +1,62 @@
 <template>
-  <div>
-    <h4>Редактирование категории {{ $props.category.title }} <i class="material-icons">{{ $props.category.icon }}</i>
-    </h4>
-    <form @submit.prevent="updateCategory">
-      <input type="text" placeholder="Введите название категории" :value="$props.category.title" ref="textupdate">
-      <p>Иконка {{ $props.category.icon }} - <i class="material-icons">{{ $props.category.icon }}</i></p>
+    <div>
+        <h4>Редактирование категории {{ $props.category.title }} <i class="material-icons">{{ $props.category.icon
+            }}</i>
+        </h4>
+        <form @submit.prevent="updateCategory">
+            <input type="text" placeholder="Введите название категории" :value="$props.category.title" ref="textupdate">
+            <p>Иконка {{ $props.category.icon }} - <i class="material-icons">{{ $props.category.icon }}</i></p>
+            <button class="icon-item" ref="buttons" type="button"  @click="chooseIcon" v-for="icon in icons" :id="icon" :class="$props.category.icon === icon ? 'selected' : ''">
+                <i class="material-icons">{{icon}}</i>
+                <span v-if="$props.category.icon === icon">В</span>
+            </button>
 
-      <div class="input-field col s12">
+            <button>Обновить</button>
+        </form>
 
-        <select ref="iconupdate">
-          <option value="" disabled selected>Виберите новую иконку</option>
-          <option v-for="icon in icons" :value="icon" >
-            <i
-              class="material-icons" >{{ icon }}</i>
-<!--            <span>-->
-<!--              {{icon === $props.category.icon  ? 'bold': 'ok'}}-->
-<!--            </span>-->
-          </option>
-        </select>
-      </div>
-      <button>Обновить</button>
-    </form>
-  </div>
+    </div>
 </template>
 
 <script>
+    export default {
+        props: ['category', 'icons'],
+        data: () => ({
+            select: null,
+            chosenIcon: ''
+        }),
+        methods: {
+            chooseIcon(e){
+                this.$refs.buttons.forEach(el => el.classList.remove('selected'))
+                e.target.classList.add('selected')
+                this.chosenIcon = e.target.id
+            },
+            async updateCategory() {
+                try {
+                    const formData = {
+                        id: this.category.id,
+                        title: this.$refs.textupdate.value,
+                        icon: this.chosenIcon || this.category.icon
+                    }
+                    await this.$store.dispatch('updateCategory', formData)
+                    this.$message('Категория успешно обновлена')
+                    this.$emit('updated', formData)
+                } catch (e) {
+                }
+            },
+        },
+        mounted() {
+            this.select = M.FormSelect.init(this.$refs.iconupdate)
+            M.updateTextFields()
 
-export default {
-  props: ['category', 'icons'],
-  data: () => ({
-    select: null
-  }),
-  methods: {
-    async updateCategory() {
-      try {
-        const formData = {
-          id: this.category.id,
-          title: this.$refs.textupdate.value,
-          icon: this.$refs.iconupdate.value || this.category.icon
-        }
-        await this.$store.dispatch('updateCategory', formData)
-        this.$message('Категория успешно обновлена')
-        this.$emit('updated', formData)
-      } catch (e) {
-      }
-    },
-  },
-  mounted() {
-    this.select = M.FormSelect.init(this.$refs.iconupdate)
-    M.updateTextFields()
-
-  },
-  destroyed() {
-    if (this.select && this.select.destroy) {
-      this.select.destroy()
+        },
+        destroyed() {
+            if (this.select && this.select.destroy) {
+                this.select.destroy()
+            }
+        },
     }
-  },
-}
 </script>
 
 <style>
-.bold {
-  font-style: italic;
-}
+
 </style>

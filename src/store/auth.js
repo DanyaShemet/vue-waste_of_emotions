@@ -26,11 +26,13 @@ export default {
                 throw e
             }
         },
-        async registerGoogleUser({dispatch, commit}, {email, password, name}){
+        async loginGoogleUser({dispatch, commit}, {email, password, name}){
             try{
+                const info = (await firebase.database().ref(`/users/${password}/info`).once('value')).val();
+                console.log(info)
                 await firebase.database().ref(`/users/${password}/info`).set({
-                    emotions: 100,
-                    name
+                    name,
+                    emotions: info.emotions || 0
                 })
             }catch (e) {
                 commit('setError', e)
