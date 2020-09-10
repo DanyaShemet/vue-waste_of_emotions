@@ -5,6 +5,15 @@ export default {
         async login({dispatch, commit}, {email, password}){
             try{
                 await firebase.auth().signInWithEmailAndPassword(email, password)
+                const uid = await dispatch('getUid');
+                const info = (await firebase.database().ref(`/users/${uid}/info`).once('value')).val();
+                await firebase.database().ref(`/users/${uid}/info`).set({
+                    outcomeCount: info.outcomeCount || 0,
+                    incomeCount: info.incomeCount || 0,
+                    emotions: info.incomeCount - info.outcomeCount || 0,
+                    name: info.name
+
+                })
             }catch (e){
                 commit ('setError', e)
                 throw e
@@ -18,8 +27,10 @@ export default {
                 await firebase.auth().createUserWithEmailAndPassword(email, password)
                 const uid = await dispatch('getUid');
                 await firebase.database().ref(`/users/${uid}/info`).set({
-                    emotions: 100,
-                    name
+                    outcomeCount: 0,
+                    incomeCount: 0,
+                    emotions: 0,
+                    name,
                 })
             }catch (e){
                 commit ('setError', e)
@@ -29,11 +40,22 @@ export default {
         async loginGoogleUser({dispatch, commit}, {email, password, name}){
             try{
                 const info = (await firebase.database().ref(`/users/${password}/info`).once('value')).val();
-                console.log(info)
-                await firebase.database().ref(`/users/${password}/info`).set({
-                    name,
-                    emotions: info.emotions || 0
-                })
+                if (info){
+                    await firebase.database().ref(`/users/${password}/info`).set({
+                        outcomeCount: info.outcomeCount,
+                        incomeCount: info.incomeCount,
+                        emotions: info.incomeCount - info.outcomeCount,
+                        name,
+                    })
+                }else{
+                    await firebase.database().ref(`/users/${password}/info`).set({
+                        outcomeCount: 0,
+                        incomeCount: 0,
+                        emotions: 0,
+                        name,
+                    })
+                }
+
             }catch (e) {
                 commit('setError', e)
                 throw e

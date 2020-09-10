@@ -40,10 +40,17 @@ export default {
     async deleteCategory(e) {
       let catId = e.target.dataset.id
       await this.$store.dispatch('deleteCategory', catId)
-      let cat = this.categories.filter(c => {
-        return c.id !== catId
-      })
-      this.categories = {...cat}
+      if (this.categories.length > 1){
+        let cat = this.categories.filter(c => {
+          return c.id !== catId
+        })
+        this.categories = {...cat}
+      }else{
+        let cat = []
+        this.categories = {...cat}
+      }
+
+
     },
     async showEditableForm(e){
       let catId = e.target.dataset.id

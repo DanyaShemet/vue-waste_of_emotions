@@ -26,15 +26,14 @@
         props: ['icons'],
         data: () => ({
             title: '',
-            icon: '',
+            icon: null,
         }),
         methods: {
             async submitHandler() {
-                if (this.$v.$invalid) {
+                if (this.$v.$invalid || !this.icon) {
                     this.$v.$touch()
                     return
                 }
-
                 try {
                     const category = await this.$store.dispatch('createCategory', {
                         title: this.title,
