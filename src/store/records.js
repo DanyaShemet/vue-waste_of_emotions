@@ -11,7 +11,7 @@ export default {
                 throw e
             }
         },
-        async fetchRecord({commit, dispatch}){
+        async fetchRecords({commit, dispatch}){
             try {
                 const uid = await dispatch('getUid')
                 const records = (await firebase.database().ref(`users/${uid}/records`).once('value')).val() || {};

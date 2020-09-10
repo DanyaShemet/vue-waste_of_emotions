@@ -1,7 +1,28 @@
 <template>
   <div class="categories">
     <h4>Статистика</h4>
-    {{ records }}
+    <table>
+      <thead>
+      <tr>
+        <th>#</th>
+        <th>Сумма</th>
+        <th>Дата</th>
+        <th>Категория</th>
+        <th>Тип</th>
+      </tr>
+      </thead>
+
+      <tbody>
+      <tr v-for="(record, idx) in records" :key="record.id">
+        <td>{{+idx + 1 }}</td>
+        <td>{{record.countEmotions}}</td>
+        <td>{{new Date(record.date).toLocaleDateString()}}</td>
+        <td>{{record.categoryTitle}} <i class="material-icons">{{record.icon}}</i></td>
+        <td>{{record.type}}</td>
+
+      </tr>
+      </tbody>
+    </table>
   </div>
 </template>
 
@@ -9,10 +30,29 @@
 export default {
   name: 'statistic',
   data: () => ({
-    records: []
+    records: [],
+    categories: [],
   }),
   async mounted() {
-    this.records = await this.$store.dispatch('fetchRecord')
+    this.records = await this.$store.dispatch('fetchRecords')
+    this.categories = await this.$store.dispatch('fetchCategories')
+    const records  = this.records.map(record => {
+      return {
+        ...record,
+        categoryTitle: this.categories.find(c => c.id === record.categoryId).title,
+        icon: this.categories.find(c => c.id === record.categoryId).icon
+      }
+    })
+
+    this.records = {...records}
+  },
+  computed: {
+    title(){
+      this.categories.find(c => c.id === this.record.categoryId).title
+    },
+    icon(){
+
+    }
   }
 }
 
