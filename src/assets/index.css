@@ -6,4 +6,6 @@ button{
     background: transparent;
     border: 0;
 }
-
+body{
+    font-family: 'Montserrat', sans-serif;
+}

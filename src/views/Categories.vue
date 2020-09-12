@@ -28,7 +28,10 @@ export default {
     this.categories = await this.$store.dispatch('fetchCategories')
   },
   methods: {
-    addNewCategory(category) {
+    async addNewCategory(category) {
+      if (this.categories.length > 1){
+
+      }
       this.categories.push(category)
     },
      updateCategories(category){
@@ -46,8 +49,7 @@ export default {
         })
         this.categories = {...cat}
       }else{
-        let cat = []
-        this.categories = {...cat}
+        this.categories = []
       }
 
 

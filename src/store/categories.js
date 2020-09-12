@@ -17,7 +17,14 @@ export default {
         },
         async deleteCategory({commit, dispatch}, catId){
             const uid = await dispatch('getUid')
+            const records = (await firebase.database().ref(`users/${uid}/records`).once('value')).val() || {};
+            Object.keys(records).map(key => ({...records[key], recordId: key})).forEach(el => {
+                if (el.categoryId === catId){
+                    dispatch('deleteRecords', el.recordId)
+                }
+            })
             const category = await firebase.database().ref(`users/${uid}/categories/`).child(catId).remove()
+
         },
 
         async updateCategory({commit, dispatch}, {id,title,icon}){

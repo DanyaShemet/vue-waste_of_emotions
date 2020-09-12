@@ -1,7 +1,7 @@
 <template>
   <div class="categories">
     <h4>Статистика</h4>
-    <table>
+    <table v-if="records.length">
       <thead>
       <tr>
         <th>#</th>
@@ -23,6 +23,7 @@
       </tr>
       </tbody>
     </table>
+    <div v-else>У вас нет ни одной записи <router-link to="/main">Добавить запись</router-link></div>
   </div>
 </template>
 
