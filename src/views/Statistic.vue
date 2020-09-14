@@ -44,16 +44,10 @@ export default {
         icon: this.categories.find(c => c.id === record.categoryId).icon
       }
     })
-
-    this.records = {...records}
+    this.records = records
   },
   computed: {
-    title(){
-      this.categories.find(c => c.id === this.record.categoryId).title
-    },
-    icon(){
 
-    }
   }
 }
 

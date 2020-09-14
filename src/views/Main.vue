@@ -217,6 +217,7 @@ export default {
   height: 100px;
   border-radius: 50%;
   font-size: 25px;
+  cursor: pointer;
 
   &.minus-emotion {
     background-color: #000;
@@ -228,7 +229,22 @@ export default {
     }
   }
 
+  &.minus{
+    background-color: #000;
+    color: #fff;
+    &:focus {
+      background-color: #000;
+    }
+  }
+
   &.plus-emotion {
+    border: 3px solid #000;
+
+    &:focus {
+      background-color: #fff;
+    }
+  }
+  &.plus {
     border: 3px solid #000;
 
     &:focus {

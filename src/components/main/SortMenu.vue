@@ -36,7 +36,7 @@ export default {
     width: 300px;
     transition: all .4s;
     &.novisible{
-      left: -300px;
+      left: -100%;
     }
     button{
       cursor: pointer;

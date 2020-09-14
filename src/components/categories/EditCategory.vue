@@ -13,7 +13,7 @@
         <span v-if="$props.category.icon === icon">В</span>
       </button>
 
-      <button>Обновить</button>
+      <button class="plus-category action-emotion">+</button>
     </form>
 
   </div>
@@ -62,6 +62,9 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+.plus-category {
+  display: block;
+  margin: 0 auto;
+}
 </style>

@@ -24,7 +24,6 @@ export default {
                 }
             })
             const category = await firebase.database().ref(`users/${uid}/categories/`).child(catId).remove()
-
         },
 
         async updateCategory({commit, dispatch}, {id,title,icon}){
