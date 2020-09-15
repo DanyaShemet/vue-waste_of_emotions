@@ -8,11 +8,14 @@
       <button @click="showEditableForm" :data-id=category.id>Редактировать</button>
     </div>
     <div class="action-buttons action-buttons-category">
-      <button @click="showCreatableForm" class="action-emotion " v-if="!isEditable"  :class="(isCreatable || isEditable) ? 'minus minus-category' : 'plus-category plus'">{{(isCreatable || isEditable) ? '-' : '+'}}</button>
-      <button @click="hideEditableForm" class="action-emotion minus minus-category" v-if="isEditable" >-</button>
+      <button @click="showCreatableForm" class="action-emotion" v-if="!isEditable"
+              :class="isCreatable ? 'minus minus-category' : 'plus-category plus'">{{ isCreatable ? '-' : '+' }}
+      </button>
+      <button @click="hideEditableForm" class="action-emotion minus minus-category" v-if="isEditable">-</button>
     </div>
     <CreateCategory @created="addNewCategory" :icons="categoryIcons" v-if="isCreatable" :categories="categories"/>
-    <EditCategory v-if="isEditable" :category="editableCategory"  :icons="categoryIcons" @updated="updateCategories" />
+    <EditCategory v-if="isEditable" :category="editableCategory" :icons="categoryIcons" @updated="updateCategories"
+                  :categories="categories" :key="isRerender"/>
   </div>
 </template>
 
@@ -22,42 +25,89 @@ import EditCategory from '@/components/categories/EditCategory'
 
 export default {
   data: () => ({
-    categoryIcons: ['brightness_3', 'accessibility' ,'audiotrack', 'child_care','directions_run'],
+    categoryIcons: [
+      'brightness_3',
+      'rowing',
+      'accessibility',
+      'audiotrack',
+      'child_care',
+      'directions_run',
+      'emoji_events',
+      'delete',
+      'touch_app',
+      'hot_tub',
+      'casino',
+      'cake',
+      'school',
+      'sick',
+      'emoji_food_beverage',
+      'beach_access',
+      'duo',
+      'tv',
+      'headset',
+      'airplanemode_active',
+      'brightness_5',
+      'videogame_asset',
+      'color_lens',
+      'videogame_asset',
+      'sports_bar',
+      'euro_symbol',
+      'pool',
+      'alternate_email',
+      'center_focus_strong',
+      'play_circle_filled',
+    ],
     categories: [],
     isEditable: false,
     editableCategory: {},
     updateCount: 0,
-    isCreatable: false
+    isCreatable: false,
+    isRerender: 0,
   }),
   async mounted() {
     this.categories = await this.$store.dispatch('fetchCategories')
+    let userIcons = []
+    this.categories.forEach(el => {
+      userIcons.push(el.icon)
+    })
+    for (let i of userIcons) {
+      const idxOfCategoryIcons = this.categoryIcons.findIndex(s => s === i)
+      this.deleteIcons(idxOfCategoryIcons)
+    }
   },
   methods: {
+    deleteIcons(idx) {
+      this.categoryIcons.splice(idx, 1)
+    },
     async addNewCategory(category) {
       this.categories.push(category)
       this.isCreatable = false
+      this.categoryIcons = this.categoryIcons.filter(icon => icon !== category.icon)
     },
-     updateCategories(category){
+    updateCategories(category) {
       const idx = this.categories.findIndex(c => c.id === category.id)
+      this.categoryIcons.push(this.categories[idx].icon)
       this.categories[idx].title = category.title
       this.categories[idx].icon = category.icon
-       this.isEditable = false
+      this.categoryIcons = this.categoryIcons.filter(icon => icon !== category.icon)
+      this.isEditable = false
     },
     async deleteCategory(e) {
       let catId = e.target.dataset.id
+      const idx = this.categories.findIndex(c => c.id === catId)
+      this.categoryIcons.push(this.categories[idx].icon)
       await this.$store.dispatch('deleteCategory', catId)
-      if (this.categories.length > 1){
+      if (this.categories.length > 1) {
         let cat = this.categories.filter(c => {
           return c.id !== catId
         })
         this.categories = [...cat]
-        console.log(this.categories)
-      }else{
+      } else {
         this.categories = []
-
       }
     },
-    async showEditableForm(e){
+    async showEditableForm(e) {
+      this.idRerender += 1
       this.isCreatable = false
       let catId = e.target.dataset.id
       this.isEditable = true
@@ -68,10 +118,10 @@ export default {
         icon: category.icon,
       }
     },
-    showCreatableForm(){
+    showCreatableForm() {
       this.isCreatable = !this.isCreatable
     },
-    hideEditableForm(){
+    hideEditableForm() {
       this.isEditable = false
     }
   },
@@ -84,20 +134,22 @@ export default {
 
 <style lang="scss">
 
-.action-buttons-category button{
+.action-buttons-category button {
   margin-right: 0 !important;
   width: 38px;
   height: 38px;
   font-size: 18px;
 }
-.plus-category{
+
+.plus-category {
   border: 1px solid #000 !important;
   width: 38px;
   height: 38px;
   font-size: 18px;
-  &:focus{
-      background-color: #fff;
-   }
+
+  &:focus {
+    background-color: #fff;
+  }
 }
 
 </style>

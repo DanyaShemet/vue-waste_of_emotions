@@ -7,50 +7,85 @@
             fill=""/>
       </svg>
     </div>
+    <SortMenu :class="{novisible: !sortMenu}"
+              @showBalancePerDay="showBalancePerDay"
+              :sort="info.sort"
+              @showAllBalance="showAllBalance"
+              @hide="showSortMenu"/>
 
-    <SortMenu  :class="{novisible: !sortMenu}" @showBalancePerDay="showBalancePerDay" :sort="this.info.sort" @showAllBalance="showAllBalance"
-               @hide="showSortMenu"/>
-
-
-
-<!--    <button @click="showBalancePerDay" :class="this.info.sort === 'day' ? 'selected' : ''">Показать за день</button>-->
-    <button>Показать за 7 дней</button>
-<!--    <button @click="showAllBalance" :class="this.info.sort === 'all' ? 'selected' : ''">Показать за все время</button>-->
-    <p>Имя {{ this.info.name }}</p>
-    <p :class="this.info.emotions < 0  ? 'red' : 'green'">Баланс: {{ this.info.emotions }} емоций</p>
-    <p>Потрачено {{ this.info.outcomeCount }}</p>
-    <p>Заработано {{ this.info.incomeCount }}</p>
-    <div class="action-buttons" v-if="categories.length">
-      <button @click="showOutcomeForm" class="minus-emotion action-emotion">-</button>
-      <button @click="showIncomeForm" class="plus-emotion action-emotion">+</button>
+    <h4>Баланс эмоций за {{ info.sort === 'all' ? 'все время' : info.sort === 'day' ? 'день' : '' }}:
+      <strong>{{ info.emotions }}
+        <svg width="22" height="19" viewBox="0 0 22 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path
+              d="M20.9499 8.0716C21.9021 14.8735 18.9008 19 14.9189 19C10.9369 19 0 12.371 0 8.38902C0 4.40704 6.99176 0 10.9737 0C14.9557 0 20.9499 4.08961 20.9499 8.0716Z"
+              fill="black"/>
+          <path
+              d="M11.7405 4.43046C12.0062 6.3298 11.1687 7.48206 10.0577 7.48206C8.94662 7.48206 5.89502 5.63101 5.89502 4.51909C5.89502 3.40718 7.84586 2.17657 8.95691 2.17657C10.068 2.17657 11.7405 3.31854 11.7405 4.43046Z"
+              fill="white"/>
+          <path
+              d="M10.4031 12.2457C10.5452 13.2603 10.0975 13.8759 9.5035 13.8759C8.90951 13.8759 7.27808 12.8871 7.27808 12.2931C7.27808 11.6991 8.32103 11.0417 8.91501 11.0417C9.509 11.0417 10.4031 11.6518 10.4031 12.2457Z"
+              fill="white"/>
+          <path
+              d="M18.0186 7.02012C19.1425 8.57415 18.9418 9.98438 17.96 10.5045C16.9782 11.0245 13.4151 10.8173 12.8946 9.83468C12.3741 8.85211 13.522 6.85147 14.5038 6.33139C15.4856 5.8113 17.4981 6.03755 18.0186 7.02012Z"
+              fill="white"/>
+        </svg>
+      </strong></h4>
+    <div class="stat">
+      <p class="out">Потрачено: {{ info.outcomeCount }}</p>
+      <p class="inc">Заработано: {{ info.incomeCount }}</p>
     </div>
-    <div v-else>У вас нет ни одной категории
+    <div class="history-chart" v-if="records.length">
+      <div class="chart-outcome">
+        <h5>Расходы</h5>
+        <canvas ref="canvas"></canvas>
+      </div>
+      <div class="income">
+        <h5>Доходы</h5>
+        <canvas ref="canvasincome"></canvas>
+      </div>
+
+    </div>
+    <div class="action-buttons" v-if="categories.length">
+      <button @click="showIncomeForm" class="plus-emotion action-emotion">+</button>
+      <button @click="showOutcomeForm" class="minus-emotion action-emotion">-</button>
+    </div>
+    <div v-else class="center">У вас нет ни одной категории
       <router-link to="/categories">Добавить категории</router-link>
     </div>
 
 
-    <div v-if="type === 'outcome'">
-      <form @submit.prevent="outcomeSubmit">
-        <input type="number" v-model="number">
-        <button type="button" v-for="icon in categories" @click="chooseIcon" ref="buttons" :id="icon.id">
-          <i class="material-icons">{{ icon.icon }}</i>
-          <span class="icon-text">{{ icon.title }}</span>
-        </button>
-        <button>Потвердить</button>
-      </form>
-    </div>
-    <div v-if="type === 'income'">
-      <form @submit.prevent="incomeSubmit">
-        <input type="number" v-model="number">
-        <button type="button" v-for="icon in categories" @click="chooseIcon" ref="buttons" :id="icon.id">
-          <i class="material-icons">{{ icon.icon }}</i>
-          <span class="icon-text">{{ icon.title }}</span>
-        </button>
-        <button>Потвердить</button>
-      </form>
+    <div v-if="type === 'outcome'" class="outcome-form form-emotions" @click="hideForm">
+      <div class="form" @click="(e) => {e.stopPropagation()}">
+        <h4>Удаление эмоции</h4>
+        <form @submit.prevent="outcomeSubmit">
+          <input type="number" v-model="number">
+          <button type="button" v-for="icon in categories" @click="chooseIcon" ref="buttons" :id="icon.id">
+            <i class="material-icons">{{ icon.icon }}</i>
+            <span class="icon-text">{{ icon.title }}</span>
+          </button>
+          <button>Потвердить</button>
+        </form>
+        <button @click="hideForm">Отмена</button>
+      </div>
 
     </div>
+    <div v-if="type === 'income'" class="income-form form-emotions" @click="hideForm">
+      <div class="form" @click="(e) => {e.stopPropagation()}">
+        <h4>Добавление эмоции</h4>
+        <form @submit.prevent="incomeSubmit">
+          <input type="number" v-model="number">
+          <button type="button" v-for="icon in categories" @click="chooseIcon" ref="buttons" :id="icon.id">
+            <i class="material-icons">{{ icon.icon }}</i>
+            <span class="icon-text">{{ icon.title }}</span>
+          </button>
+          <button>Потвердить</button>
 
+        </form>
+        <button @click="hideForm">Отмена</button>
+      </div>
+
+
+    </div>
 
   </div>
 </template>
@@ -59,18 +94,14 @@
 <script>
 import {mapGetters} from 'vuex'
 import SortMenu from '@/components/main/SortMenu'
+import {Pie} from 'vue-chartjs'
 
 export default {
   name: 'main-page',
   computed: {
     ...mapGetters(['info']),
-    canCreateRecord() {
-      if (this.info.emotions < this.number) {
-        return
-      }
-      return this.info.emotions >= this.number
-    }
   },
+  extends: Pie,
   components: {
     SortMenu
   },
@@ -92,12 +123,15 @@ export default {
       this.type = 'outcome'
       this.number = 0
     },
-    showSortMenu(){
+    showSortMenu() {
       this.sortMenu = !this.sortMenu
     },
     showIncomeForm() {
       this.type = 'income'
       this.number = 0
+    },
+    hideForm() {
+      this.type = false
     },
     async incomeSubmit() {
       if (!this.chosenIcon || +this.number === 0) {
@@ -120,11 +154,12 @@ export default {
         }
         await this.$store.dispatch('updateInfo', emotions)
         this.$message('Запись создана')
+        this.records = await this.$store.dispatch('fetchRecords')
+        this.setup(this.categories)
 
       } catch (e) {
       }
     },
-
     async outcomeSubmit() {
       if (!this.chosenIcon || +this.number === 0) {
         console.log('Напиши кол-во эмоций и выбери иконку')
@@ -148,6 +183,8 @@ export default {
         }
         await this.$store.dispatch('updateInfo', emotions)
         this.$message('Запись создана')
+        this.records = await this.$store.dispatch('fetchRecords')
+        await this.setup(this.categories)
       } catch (e) {
       }
 
@@ -197,21 +234,139 @@ export default {
       })
 
       await this.$store.dispatch('updateInfo', emotions)
+    },
+    randomInteger(min, max) {
+      return Math.round(min - 0.5 + Math.random() * (max - min + 1));
+    },
+    setup(categories) {
+      let borderColor = []
+      let backgroundColor = []
+      for (let category of categories) {
+        borderColor.push('#000')
+        let r = this.randomInteger(0,255)
+        let g = this.randomInteger(0,255)
+        let b = this.randomInteger(0,255)
+        let a = '0.' + this.randomInteger(2,5)
+        backgroundColor.push(`rgba(${r},${g},${b},${a})`)
+        console.log(backgroundColor)
+      }
+      this.renderChart({
+        labels: categories.map(c => c.title),
+        datasets: [{
+          data: categories.map(c => {
+            return this.records.reduce((total, r) => {
+              if (r.categoryId === c.id && r.type === 'outcome') {
+                total += +r.countEmotions
+              }
+              return total
+            }, 0)
+          }),
+          backgroundColor: backgroundColor,
+          borderColor: borderColor,
+          borderWidth: 1
+        }]
+      })
+
+      // let borderColorIncome = []
+      // for (let category of categories) {
+      //   borderColorIncome.push('#048053')
+      // }
+      const ctx = this.$refs.canvasincome.getContext('2d');
+      const myChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+          labels: categories.map(c => c.title),
+          datasets: [{
+            data: categories.map(c => {
+              return this.records.reduce((total, r) => {
+                if (r.categoryId === c.id && r.type === 'income') {
+                  total += +r.countEmotions
+                }
+                return total
+              }, 0)
+            }),
+            backgroundColor: backgroundColor,
+            borderColor: borderColor,
+            borderWidth: 1
+          }]
+        },
+        options: {}
+      });
     }
 
 
   },
   async mounted() {
     this.records = await this.$store.dispatch('fetchRecords')
-    this.categories = await this.$store.dispatch('fetchCategories')
+    const categories = await this.$store.dispatch('fetchCategories')
+    this.categories = categories
+    this.setup(categories)
 
-  },
+  }
+  ,
 
 
 }
 </script>
 
 <style lang="scss">
+.form-emotions {
+  position: fixed;
+  background-color: rgba(0, 0, 0, 0.2);
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .form {
+    padding: 10px;
+    height: 300px;
+    border-radius: 20px;
+    border: 2px solid #000;
+    background-color: #fff;
+
+    h4 {
+      font-weight: 600;
+      font-size: 25px;
+    }
+  }
+}
+
+h4 {
+  font-size: 30px;
+  text-align: center;
+  margin-bottom: 20px;
+
+  svg {
+    margin-left: 5px;
+  }
+}
+
+.stat {
+  margin-bottom: 20px;
+  text-align: center;
+
+  p {
+    font-size: 24px;
+
+    &.out {
+      color: #C10E0E;
+    }
+
+    &.inc {
+      color: #048053;
+    }
+  }
+}
+
+.main {
+  margin-top: 100px;
+}
+
 .action-emotion {
   width: 100px;
   height: 100px;
@@ -222,16 +377,16 @@ export default {
   &.minus-emotion {
     background-color: #000;
     color: #fff;
-    margin-right: 20px;
 
     &:focus {
       background-color: #000;
     }
   }
 
-  &.minus{
+  &.minus {
     background-color: #000;
     color: #fff;
+
     &:focus {
       background-color: #000;
     }
@@ -239,11 +394,13 @@ export default {
 
   &.plus-emotion {
     border: 3px solid #000;
+    margin-right: 70px;
 
     &:focus {
       background-color: #fff;
     }
   }
+
   &.plus {
     border: 3px solid #000;
 
@@ -261,19 +418,55 @@ export default {
 .settings {
   cursor: pointer;
   position: absolute;
-  left: 40px;
-  top: 40px;
-  z-index: 1;
+  left: 5%;
+  top: 4%;
+  z-index: 100001;
   transition: all .4s;
-  svg{
+
+  svg {
     fill: black;
     transition: all .2s;
-    &:hover{
+
+    &:hover {
       fill: #C0C0C0;
     }
   }
-  &.active{
+
+  &.active {
     left: 12%;
+    svg{
+      fill: #fff;
+      transition: all .2s;
+      &:hover {
+        fill: #C0C0C0;
+      }
+    }
+  }
+}
+
+.history-chart {
+  position: absolute;
+  width: 70%;
+  left: 50%;
+  top: 40%;
+  margin-left: -35%;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+
+  div {
+    width: 49%;
+    border: 1px solid #C0C0C0;
+    border-radius: 10px;
+    padding: 20px 10px 30px 10px;
+
+    h5 {
+      text-align: center;
+      font-weight: 700;
+      font-size: 16px;
+      margin-bottom: 15px;
+      margin-top: 0;
+    }
   }
 }
 

@@ -23,7 +23,7 @@
       </tr>
       </tbody>
     </table>
-    <div v-else>У вас нет ни одной записи <router-link to="/main">Добавить запись</router-link></div>
+    <div v-else class="center">У вас нет ни одной записи <router-link to="/main">Добавить запись</router-link></div>
   </div>
 </template>
 

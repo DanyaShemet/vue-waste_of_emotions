@@ -1,0 +1,58 @@
+i,.icon-text{
+    pointer-events: none;
+}
+
+button{
+    background: transparent;
+    border: 0;
+}
+p{
+    padding: 0;
+    margin: 0;
+}
+body{
+    font-family: 'Montserrat', sans-serif;
+}
+.container{
+    width: 660px;
+}
+.icon-item{
+    width: 43px;
+    height: 43px;
+    border: 1px solid #000;
+    border-radius: 5px;
+    margin: 2px;
+    &.selected{
+        border: 0;
+        background-color: #000;
+        i{
+            color: #fff;
+        }
+    }
+    &:focus{
+        background-color: #000;
+        i{
+            color: #fff;
+        }
+    }
+}
+.category-buttons{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+
+}
+input.invalid{
+    border-bottom: 1px solid #F44336;
+    box-shadow: 0 1px 0 0 #F44336;
+}
+.error{
+    color: #F44336;
+}
+
+.icon-item.active{
+    background-color: gray;
+}
+

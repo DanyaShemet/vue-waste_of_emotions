@@ -2,9 +2,10 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
-import './assets/index.css'
+import './assets/index.scss'
 import 'materialize-css/dist/js/materialize.min'
 import Vuelidate from "vuelidate";
+import Loader from '@/components/Loader'
 import messagePlugin from "./utils/message.plugin";
 Vue.config.productionTip = false
 import firebase from "firebase/app";
@@ -12,9 +13,10 @@ import 'firebase/auth';
 import 'firebase/database';
 
 
-
+Vue.component("Loader", Loader);
 Vue.use(Vuelidate);
 Vue.use(messagePlugin)
+
 
 
 let firebaseConfig = {

@@ -27,7 +27,7 @@ export default {
     position: absolute;
     left: 0;
     top: 0;
-    background-color: rgba(0,0,0,0.1);
+    background-color: rgba(0,0,0,0.7);
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -35,6 +35,7 @@ export default {
     justify-content: center;
     width: 300px;
     transition: all .4s;
+    z-index: 1000;
     &.novisible{
       left: -100%;
     }
@@ -42,6 +43,7 @@ export default {
       cursor: pointer;
       border: 1px solid #fff;
       font-size: 30px;
+      color: #fff;
       font-weight: 500;
       padding: 10px 0;
       width: 230px;
