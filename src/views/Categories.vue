@@ -1,21 +1,29 @@
 <template>
   <div class="categories">
-    <h4>Все категории</h4>
-    <div class="categoty-item" v-for="category in categories" :key="category.id">
-      {{ category.title }}
-      <i class="material-icons">{{ category.icon }}</i>
-      <button @click="deleteCategory" :data-id=category.id>Удалить</button>
-      <button @click="showEditableForm" :data-id=category.id>Редактировать</button>
+    <BigLoader v-if="loading"/>
+    <div v-else>
+      <h4>Все категории</h4>
+      <div class="categories">
+        <div class="categoty-item" v-for="category in categories" :key="category.id" :class="{deleting: loading}">
+          {{ category.title }}
+          <i class="material-icons">{{ category.icon }}</i>
+          <button @click="deleteCategory" :data-id=category.id>Удалить</button>
+          <button @click="showEditableForm" :data-id=category.id>Редактировать</button>
+<!--          <div class="loader" :id="category.id"> <Loader /></div>-->
+        </div>
+      </div>
+
+      <div class="action-buttons action-buttons-category">
+        <button @click="showCreatableForm" class="action-emotion" v-if="!isEditable"
+                :class="isCreatable ? 'minus minus-category' : 'plus-category plus'">{{ isCreatable ? '-' : '+' }}
+        </button>
+        <button @click="hideEditableForm" class="action-emotion minus minus-category" v-if="isEditable">-</button>
+      </div>
+      <CreateCategory @created="addNewCategory" :icons="categoryIcons" v-if="isCreatable" :categories="categories"/>
+      <EditCategory v-if="isEditable" :category="editableCategory" :icons="categoryIcons" @updated="updateCategories"
+                    :categories="categories" :key="isRerender"/>
     </div>
-    <div class="action-buttons action-buttons-category">
-      <button @click="showCreatableForm" class="action-emotion" v-if="!isEditable"
-              :class="isCreatable ? 'minus minus-category' : 'plus-category plus'">{{ isCreatable ? '-' : '+' }}
-      </button>
-      <button @click="hideEditableForm" class="action-emotion minus minus-category" v-if="isEditable">-</button>
-    </div>
-    <CreateCategory @created="addNewCategory" :icons="categoryIcons" v-if="isCreatable" :categories="categories"/>
-    <EditCategory v-if="isEditable" :category="editableCategory" :icons="categoryIcons" @updated="updateCategories"
-                  :categories="categories" :key="isRerender"/>
+
   </div>
 </template>
 
@@ -63,9 +71,13 @@ export default {
     updateCount: 0,
     isCreatable: false,
     isRerender: 0,
+    loading: false,
+    deleteloading: false
   }),
   async mounted() {
+    this.loading= true
     this.categories = await this.$store.dispatch('fetchCategories')
+    this.loading = false
     let userIcons = []
     this.categories.forEach(el => {
       userIcons.push(el.icon)
@@ -80,7 +92,7 @@ export default {
       this.categoryIcons.splice(idx, 1)
     },
     async addNewCategory(category) {
-      this.categories.push(category)
+      this.categories = await this.$store.dispatch('fetchCategories')
       this.isCreatable = false
       this.categoryIcons = this.categoryIcons.filter(icon => icon !== category.icon)
     },
@@ -94,6 +106,10 @@ export default {
     },
     async deleteCategory(e) {
       let catId = e.target.dataset.id
+      this.deleteloading = true
+      document.querySelector('#'+catId).classList.add('active')
+      document.querySelector('#'+catId).classList.remove('done')
+
       const idx = this.categories.findIndex(c => c.id === catId)
       this.categoryIcons.push(this.categories[idx].icon)
       await this.$store.dispatch('deleteCategory', catId)
@@ -105,9 +121,12 @@ export default {
       } else {
         this.categories = []
       }
+      this.deleteloading = false
+      document.querySelector('#'+catId).classList.remove('active')
+      this.$message('Категория была удалена')
     },
     async showEditableForm(e) {
-      this.idRerender += 1
+      this.isRerender += 1
       this.isCreatable = false
       let catId = e.target.dataset.id
       this.isEditable = true
@@ -133,7 +152,15 @@ export default {
 </script>
 
 <style lang="scss">
-
+.loader{
+  position: absolute;
+}
+div.active{
+  visibility: visible;
+}
+div.done{
+  visibility: hidden;
+}
 .action-buttons-category button {
   margin-right: 0 !important;
   width: 38px;

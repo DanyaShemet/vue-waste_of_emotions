@@ -12,13 +12,13 @@ export default {
             }
         },
         async deleteRecords({commit, dispatch}, catId) {
+            const uid = await dispatch('getUid')
+            await firebase.database().ref(`users/${uid}/records/`).child(catId).remove()
             const emotions = {
                 outcomeCount: 0,
                 incomeCount: 0,
                 emotions: 0
             }
-            const uid = await dispatch('getUid')
-            await firebase.database().ref(`users/${uid}/records/`).child(catId).remove()
             const records = (await firebase.database().ref(`users/${uid}/records`).once('value')).val() || {};
             Object.keys(records).map(key => ({...records[key]})).forEach(el => {
                 if (el.type === 'income'){

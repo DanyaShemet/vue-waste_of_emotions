@@ -20,11 +20,12 @@
       </div>
 
 
-      <button class="plus-category action-emotion">+</button>
+      <button class="plus-category action-emotion" :disabled="loading">+</button>
     </form>
 
     <p v-if="isCopy" class="error">Категория с таким именем уже есть, не стоит ее дублировать</p>
     <p v-if="isError" class="error">Введите коректное название категории</p>
+
   </div>
 </template>
 
@@ -60,6 +61,7 @@ export default {
       }
       try {
         if (!this.isCopy) {
+          this.loading = true
           const formData = {
             id: this.category.id,
             title: this.title,
@@ -67,6 +69,7 @@ export default {
           }
           await this.$store.dispatch('updateCategory', formData)
           this.$message('Категория успешно обновлена')
+          this.loading = false
           this.$emit('updated', formData)
         }
       } catch (e) {

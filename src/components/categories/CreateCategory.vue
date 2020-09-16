@@ -11,11 +11,12 @@
 
       </div>
 
-      <button class="plus-category action-emotion">+</button>
+      <button class="plus-category action-emotion" :disabled="loading">+</button>
     </form>
     <p v-if="isCopy" class="error">Категория с таким именем уже есть, не стоит ее дублировать</p>
-    <p  v-if="$v.title.$dirty && !$v.title.required" class="error">Введите коректное название категории</p>
+    <p v-if="$v.title.$dirty && !$v.title.required" class="error">Введите коректное название категории</p>
     <p v-if="isError.icon" class="error">Выберите иконку</p>
+    <Loader v-if="loading"/>
   </div>
 </template>
 
@@ -30,7 +31,8 @@ export default {
     isCopy: false,
     isError: {
       icon: false
-    }
+    },
+    loading: false
   }),
   methods: {
     async submitHandler() {
@@ -41,27 +43,29 @@ export default {
       if (!this.icon) {
         this.isError.icon = true
         return
-      }else{
+      } else {
         this.isError.icon = false
       }
 
-      for (let category of this.categories){
-        if (category.title.trim().toLowerCase() === this.title.trim().toLowerCase()){
+      for (let category of this.categories) {
+        if (category.title.trim().toLowerCase() === this.title.trim().toLowerCase()) {
           this.isCopy = true
           return
-        }this.isCopy = false
+        }
+        this.isCopy = false
       }
       try {
-
-        if (!this.isCopy){
-          const category = await this.$store.dispatch('createCategory', {
+        if (!this.isCopy) {
+          this.loading = true
+          const category = {
             title: this.title,
             icon: this.icon
-          });
+          }
+          await this.$store.dispatch('createCategory',category);
           this.title = ''
-
           this.$v.$reset()
           this.$message('Категория была создана')
+          this.loading = false
           this.isCopy = null
           this.$emit('created', category)
         }
@@ -77,10 +81,6 @@ export default {
   validations: {
     title: {required, minLength: minLength(2)},
   },
-  mounted() {
-    M.FormSelect.init(this.$refs.select)
-    M.updateTextFields()
-  },
 }
 </script>
 
@@ -88,5 +88,8 @@ export default {
 .plus-category {
   display: block;
   margin: 0 auto;
+}
+form{
+  margin-bottom: 20px;
 }
 </style>

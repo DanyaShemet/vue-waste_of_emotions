@@ -1,14 +1,10 @@
 import firebase from "firebase/app";
 export default {
     actions: {
-        async createCategory({commit, dispatch}, {title,icon}){
+        async createCategory({commit, dispatch}, category){
             try {
                 const uid = await dispatch('getUid')
-                const category = await firebase.database().ref(`users/${uid}/categories`).push({title, icon})
-                return {
-                    title,icon, id: category.key
-                }
-
+                return await firebase.database().ref(`users/${uid}/categories`).push(category)
             }
             catch (e) {
                 commit('setError', e)
@@ -17,13 +13,14 @@ export default {
         },
         async deleteCategory({commit, dispatch}, catId){
             const uid = await dispatch('getUid')
+            await firebase.database().ref(`users/${uid}/categories/`).child(catId).remove()
             const records = (await firebase.database().ref(`users/${uid}/records`).once('value')).val() || {};
             Object.keys(records).map(key => ({...records[key], recordId: key})).forEach(el => {
                 if (el.categoryId === catId){
                     dispatch('deleteRecords', el.recordId)
                 }
             })
-            const category = await firebase.database().ref(`users/${uid}/categories/`).child(catId).remove()
+
         },
 
         async updateCategory({commit, dispatch}, {id,title,icon}){
@@ -55,7 +52,6 @@ export default {
                 const uid = await dispatch('getUid')
                 const categories = (await firebase.database().ref(`users/${uid}/categories`).once('value')).val() || {};
                 return Object.keys(categories).map(key => ({...categories[key], id: key}))
-
             }
             catch (e) {
                 commit('setError', e)

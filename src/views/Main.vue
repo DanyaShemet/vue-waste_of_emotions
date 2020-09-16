@@ -1,91 +1,87 @@
 <template>
   <div class="main">
-    <div class="settings" @click="showSortMenu" :class="sortMenu ? 'active': ''">
-      <svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path
-            d="M35.09 23.7234C35.1633 23.1734 35.2 22.605 35.2 22C35.2 21.4134 35.1633 20.8267 35.0716 20.2767L38.7933 17.38C39.1233 17.1234 39.215 16.6284 39.0133 16.2617L35.4933 10.175C35.2733 9.77169 34.815 9.64336 34.4116 9.77169L30.03 11.5317C29.1133 10.835 28.1416 10.2484 27.06 9.80836L26.4 5.15169C26.3266 4.71169 25.96 4.40002 25.52 4.40002H18.48C18.04 4.40002 17.6916 4.71169 17.6183 5.15169L16.9583 9.80836C15.8766 10.2484 14.8866 10.8534 13.9883 11.5317L9.60664 9.77169C9.20331 9.62502 8.74498 9.77169 8.52498 10.175L5.02331 16.2617C4.80331 16.6467 4.87664 17.1234 5.24331 17.38L8.96498 20.2767C8.87331 20.8267 8.79998 21.4317 8.79998 22C8.79998 22.5684 8.83664 23.1734 8.92831 23.7234L5.20664 26.62C4.87664 26.8767 4.78498 27.3717 4.98664 27.7384L8.50664 33.825C8.72664 34.2284 9.18498 34.3567 9.58831 34.2284L13.97 32.4684C14.8866 33.165 15.8583 33.7517 16.94 34.1917L17.6 38.8484C17.6916 39.2884 18.04 39.6 18.48 39.6H25.52C25.96 39.6 26.3266 39.2884 26.3816 38.8484L27.0416 34.1917C28.1233 33.7517 29.1133 33.165 30.0116 32.4684L34.3933 34.2284C34.7966 34.375 35.255 34.2284 35.475 33.825L38.995 27.7384C39.215 27.335 39.1233 26.8767 38.775 26.62L35.09 23.7234ZM22 28.6C18.37 28.6 15.4 25.63 15.4 22C15.4 18.37 18.37 15.4 22 15.4C25.63 15.4 28.6 18.37 28.6 22C28.6 25.63 25.63 28.6 22 28.6Z"
-            fill=""/>
-      </svg>
-    </div>
-    <SortMenu :class="{novisible: !sortMenu}"
-              @showBalancePerDay="showBalancePerDay"
-              :sort="info.sort"
-              @showAllBalance="showAllBalance"
-              @hide="showSortMenu"/>
-
-    <h4>Баланс эмоций за {{ info.sort === 'all' ? 'все время' : info.sort === 'day' ? 'день' : '' }}:
-      <strong>{{ info.emotions }}
-        <svg width="22" height="19" viewBox="0 0 22 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <BigLoader v-if="loading"/>
+    <div v-else>
+      <div class="settings" @click="showSortMenu" :class="sortMenu ? 'active': ''">
+        <svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path
-              d="M20.9499 8.0716C21.9021 14.8735 18.9008 19 14.9189 19C10.9369 19 0 12.371 0 8.38902C0 4.40704 6.99176 0 10.9737 0C14.9557 0 20.9499 4.08961 20.9499 8.0716Z"
-              fill="black"/>
-          <path
-              d="M11.7405 4.43046C12.0062 6.3298 11.1687 7.48206 10.0577 7.48206C8.94662 7.48206 5.89502 5.63101 5.89502 4.51909C5.89502 3.40718 7.84586 2.17657 8.95691 2.17657C10.068 2.17657 11.7405 3.31854 11.7405 4.43046Z"
-              fill="white"/>
-          <path
-              d="M10.4031 12.2457C10.5452 13.2603 10.0975 13.8759 9.5035 13.8759C8.90951 13.8759 7.27808 12.8871 7.27808 12.2931C7.27808 11.6991 8.32103 11.0417 8.91501 11.0417C9.509 11.0417 10.4031 11.6518 10.4031 12.2457Z"
-              fill="white"/>
-          <path
-              d="M18.0186 7.02012C19.1425 8.57415 18.9418 9.98438 17.96 10.5045C16.9782 11.0245 13.4151 10.8173 12.8946 9.83468C12.3741 8.85211 13.522 6.85147 14.5038 6.33139C15.4856 5.8113 17.4981 6.03755 18.0186 7.02012Z"
-              fill="white"/>
+              d="M35.09 23.7234C35.1633 23.1734 35.2 22.605 35.2 22C35.2 21.4134 35.1633 20.8267 35.0716 20.2767L38.7933 17.38C39.1233 17.1234 39.215 16.6284 39.0133 16.2617L35.4933 10.175C35.2733 9.77169 34.815 9.64336 34.4116 9.77169L30.03 11.5317C29.1133 10.835 28.1416 10.2484 27.06 9.80836L26.4 5.15169C26.3266 4.71169 25.96 4.40002 25.52 4.40002H18.48C18.04 4.40002 17.6916 4.71169 17.6183 5.15169L16.9583 9.80836C15.8766 10.2484 14.8866 10.8534 13.9883 11.5317L9.60664 9.77169C9.20331 9.62502 8.74498 9.77169 8.52498 10.175L5.02331 16.2617C4.80331 16.6467 4.87664 17.1234 5.24331 17.38L8.96498 20.2767C8.87331 20.8267 8.79998 21.4317 8.79998 22C8.79998 22.5684 8.83664 23.1734 8.92831 23.7234L5.20664 26.62C4.87664 26.8767 4.78498 27.3717 4.98664 27.7384L8.50664 33.825C8.72664 34.2284 9.18498 34.3567 9.58831 34.2284L13.97 32.4684C14.8866 33.165 15.8583 33.7517 16.94 34.1917L17.6 38.8484C17.6916 39.2884 18.04 39.6 18.48 39.6H25.52C25.96 39.6 26.3266 39.2884 26.3816 38.8484L27.0416 34.1917C28.1233 33.7517 29.1133 33.165 30.0116 32.4684L34.3933 34.2284C34.7966 34.375 35.255 34.2284 35.475 33.825L38.995 27.7384C39.215 27.335 39.1233 26.8767 38.775 26.62L35.09 23.7234ZM22 28.6C18.37 28.6 15.4 25.63 15.4 22C15.4 18.37 18.37 15.4 22 15.4C25.63 15.4 28.6 18.37 28.6 22C28.6 25.63 25.63 28.6 22 28.6Z"
+              fill=""/>
         </svg>
-      </strong></h4>
-    <div class="stat">
-      <p class="out">Потрачено: {{ info.outcomeCount }}</p>
-      <p class="inc">Заработано: {{ info.incomeCount }}</p>
-    </div>
-    <div class="history-chart" v-if="records.length">
-      <div class="chart-outcome">
-        <h5>Расходы</h5>
-        <canvas ref="canvas"></canvas>
       </div>
-      <div class="income">
-        <h5>Доходы</h5>
-        <canvas ref="canvasincome"></canvas>
+      <SortMenu :class="{novisible: !sortMenu}"
+                @showBalancePerDay="showBalancePerDay"
+                :sort="info.sort"
+                @showAllBalance="showAllBalance"
+                @hide="showSortMenu"/>
+
+      <h4>Баланс эмоций за {{ info.sort === 'all' ? 'все время' : info.sort === 'day' ? 'день' : '' }}:
+        <strong>{{ info.emotions }}
+          <svg width="22" height="19" viewBox="0 0 22 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="M20.9499 8.0716C21.9021 14.8735 18.9008 19 14.9189 19C10.9369 19 0 12.371 0 8.38902C0 4.40704 6.99176 0 10.9737 0C14.9557 0 20.9499 4.08961 20.9499 8.0716Z"
+                fill="black"/>
+            <path
+                d="M11.7405 4.43046C12.0062 6.3298 11.1687 7.48206 10.0577 7.48206C8.94662 7.48206 5.89502 5.63101 5.89502 4.51909C5.89502 3.40718 7.84586 2.17657 8.95691 2.17657C10.068 2.17657 11.7405 3.31854 11.7405 4.43046Z"
+                fill="white"/>
+            <path
+                d="M10.4031 12.2457C10.5452 13.2603 10.0975 13.8759 9.5035 13.8759C8.90951 13.8759 7.27808 12.8871 7.27808 12.2931C7.27808 11.6991 8.32103 11.0417 8.91501 11.0417C9.509 11.0417 10.4031 11.6518 10.4031 12.2457Z"
+                fill="white"/>
+            <path
+                d="M18.0186 7.02012C19.1425 8.57415 18.9418 9.98438 17.96 10.5045C16.9782 11.0245 13.4151 10.8173 12.8946 9.83468C12.3741 8.85211 13.522 6.85147 14.5038 6.33139C15.4856 5.8113 17.4981 6.03755 18.0186 7.02012Z"
+                fill="white"/>
+          </svg>
+        </strong></h4>
+      <div class="stat">
+        <p class="out">Потрачено: {{ info.outcomeCount }}</p>
+        <p class="inc">Заработано: {{ info.incomeCount }}</p>
       </div>
-
-    </div>
-    <div class="action-buttons" v-if="categories.length">
-      <button @click="showIncomeForm" class="plus-emotion action-emotion">+</button>
-      <button @click="showOutcomeForm" class="minus-emotion action-emotion">-</button>
-    </div>
-    <div v-else class="center">У вас нет ни одной категории
-      <router-link to="/categories">Добавить категории</router-link>
-    </div>
-
-
-    <div v-if="type === 'outcome'" class="outcome-form form-emotions" @click="hideForm">
-      <div class="form" @click="(e) => {e.stopPropagation()}">
-        <h4>Удаление эмоции</h4>
-        <form @submit.prevent="outcomeSubmit">
-          <input type="number" v-model="number">
-          <button type="button" v-for="icon in categories" @click="chooseIcon" ref="buttons" :id="icon.id">
-            <i class="material-icons">{{ icon.icon }}</i>
-            <span class="icon-text">{{ icon.title }}</span>
-          </button>
-          <button>Потвердить</button>
-        </form>
-        <button @click="hideForm">Отмена</button>
+      <div class="history-chart" v-if="records.length && categories.length">
+        <OutcomeChart :categories="categories"  :records="records" :key="isRerenderOut"/>
+        <IncomeChart :categories="categories" :records="records" :key="isRerenderIn"/>
       </div>
-
-    </div>
-    <div v-if="type === 'income'" class="income-form form-emotions" @click="hideForm">
-      <div class="form" @click="(e) => {e.stopPropagation()}">
-        <h4>Добавление эмоции</h4>
-        <form @submit.prevent="incomeSubmit">
-          <input type="number" v-model="number">
-          <button type="button" v-for="icon in categories" @click="chooseIcon" ref="buttons" :id="icon.id">
-            <i class="material-icons">{{ icon.icon }}</i>
-            <span class="icon-text">{{ icon.title }}</span>
-          </button>
-          <button>Потвердить</button>
-
-        </form>
-        <button @click="hideForm">Отмена</button>
+      <div class="action-buttons" v-if="categories.length">
+        <button @click="showIncomeForm" class="plus-emotion action-emotion">+</button>
+        <button @click="showOutcomeForm" class="minus-emotion action-emotion">-</button>
+      </div>
+      <div v-else class="center">У вас нет ни одной категории
+        <router-link to="/categories">Добавить категории</router-link>
       </div>
 
+      <div v-if="type === 'outcome'" class="outcome-form form-emotions" @click="hideForm">
+        <div class="form" @click="(e) => {e.stopPropagation()}">
+          <h4>Удаление эмоции</h4>
+          <form @submit.prevent="outcomeSubmit">
+            <input type="number" v-model="number">
+            <button type="button" v-for="icon in categories" @click="chooseIcon" ref="buttons" :id="icon.id">
+              <i class="material-icons">{{ icon.icon }}</i>
+              <span class="icon-text">{{ icon.title }}</span>
+            </button>
+            <button>Потвердить</button>
+          </form>
+          <button @click="hideForm">Отмена</button>
+        </div>
 
+      </div>
+      <div v-if="type === 'income'" class="income-form form-emotions" @click="hideForm">
+        <div class="form" @click="(e) => {e.stopPropagation()}">
+          <h4>Добавление эмоции</h4>
+          <form @submit.prevent="incomeSubmit">
+            <input type="number" v-model="number">
+            <button type="button" v-for="icon in categories" @click="chooseIcon" ref="buttons" :id="icon.id">
+              <i class="material-icons">{{ icon.icon }}</i>
+              <span class="icon-text">{{ icon.title }}</span>
+            </button>
+            <button>Потвердить</button>
+
+          </form>
+          <button @click="hideForm">Отмена</button>
+        </div>
+
+
+      </div>
     </div>
+
 
   </div>
 </template>
@@ -94,16 +90,19 @@
 <script>
 import {mapGetters} from 'vuex'
 import SortMenu from '@/components/main/SortMenu'
-import {Pie} from 'vue-chartjs'
+import IncomeChart from '@/components/main/IncomeChart'
+import OutcomeChart from '@/components/main/OutcomeChart'
+
 
 export default {
   name: 'main-page',
   computed: {
     ...mapGetters(['info']),
   },
-  extends: Pie,
   components: {
-    SortMenu
+    SortMenu,
+    IncomeChart,
+    OutcomeChart,
   },
   data: () => ({
     type: '',
@@ -111,7 +110,10 @@ export default {
     categories: [],
     chosenIcon: null,
     records: [],
-    sortMenu: false
+    sortMenu: false,
+    isRerenderOut: null,
+    isRerenderIn: null,
+    loading: false
   }),
   methods: {
     chooseIcon(e) {
@@ -133,6 +135,8 @@ export default {
     hideForm() {
       this.type = false
     },
+
+
     async incomeSubmit() {
       if (!this.chosenIcon || +this.number === 0) {
         console.log('Напиши кол-во эмоций и выбери иконку')
@@ -155,11 +159,14 @@ export default {
         await this.$store.dispatch('updateInfo', emotions)
         this.$message('Запись создана')
         this.records = await this.$store.dispatch('fetchRecords')
+        this.isRerenderIn = Date.now()
+        this.hideForm()
         this.setup(this.categories)
 
       } catch (e) {
       }
     },
+
     async outcomeSubmit() {
       if (!this.chosenIcon || +this.number === 0) {
         console.log('Напиши кол-во эмоций и выбери иконку')
@@ -173,7 +180,6 @@ export default {
         date: new Date().toJSON()
       }
 
-
       try {
         await this.$store.dispatch('createRecord', record)
         const emotions = {
@@ -184,14 +190,17 @@ export default {
         await this.$store.dispatch('updateInfo', emotions)
         this.$message('Запись создана')
         this.records = await this.$store.dispatch('fetchRecords')
+        this.isRerenderOut = Date.now()
+        this.hideForm()
         await this.setup(this.categories)
       } catch (e) {
       }
 
     },
+
     async showBalancePerDay() {
       this.showSortMenu()
-      this.records = await this.$store.dispatch('fetchRecords')
+      //this.records = await this.$store.dispatch('fetchRecords')
       const emotions = {
         outcomeCount: 0,
         incomeCount: 0,
@@ -213,9 +222,10 @@ export default {
 
       await this.$store.dispatch('updateInfo', emotions)
     },
+
     async showAllBalance() {
       this.showSortMenu()
-      this.records = await this.$store.dispatch('fetchRecords')
+      //this.records = await this.$store.dispatch('fetchRecords')
       const emotions = {
         outcomeCount: 0,
         incomeCount: 0,
@@ -235,75 +245,13 @@ export default {
 
       await this.$store.dispatch('updateInfo', emotions)
     },
-    randomInteger(min, max) {
-      return Math.round(min - 0.5 + Math.random() * (max - min + 1));
-    },
-    setup(categories) {
-      let borderColor = []
-      let backgroundColor = []
-      for (let category of categories) {
-        borderColor.push('#000')
-        let r = this.randomInteger(0,255)
-        let g = this.randomInteger(0,255)
-        let b = this.randomInteger(0,255)
-        let a = '0.' + this.randomInteger(2,5)
-        backgroundColor.push(`rgba(${r},${g},${b},${a})`)
-        console.log(backgroundColor)
-      }
-      this.renderChart({
-        labels: categories.map(c => c.title),
-        datasets: [{
-          data: categories.map(c => {
-            return this.records.reduce((total, r) => {
-              if (r.categoryId === c.id && r.type === 'outcome') {
-                total += +r.countEmotions
-              }
-              return total
-            }, 0)
-          }),
-          backgroundColor: backgroundColor,
-          borderColor: borderColor,
-          borderWidth: 1
-        }]
-      })
-
-      // let borderColorIncome = []
-      // for (let category of categories) {
-      //   borderColorIncome.push('#048053')
-      // }
-      const ctx = this.$refs.canvasincome.getContext('2d');
-      const myChart = new Chart(ctx, {
-        type: 'pie',
-        data: {
-          labels: categories.map(c => c.title),
-          datasets: [{
-            data: categories.map(c => {
-              return this.records.reduce((total, r) => {
-                if (r.categoryId === c.id && r.type === 'income') {
-                  total += +r.countEmotions
-                }
-                return total
-              }, 0)
-            }),
-            backgroundColor: backgroundColor,
-            borderColor: borderColor,
-            borderWidth: 1
-          }]
-        },
-        options: {}
-      });
-    }
-
-
   },
   async mounted() {
+    this.loading = true
     this.records = await this.$store.dispatch('fetchRecords')
-    const categories = await this.$store.dispatch('fetchCategories')
-    this.categories = categories
-    this.setup(categories)
-
-  }
-  ,
+    this.categories = await this.$store.dispatch('fetchCategories')
+    this.loading = false
+  },
 
 
 }

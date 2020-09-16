@@ -6,6 +6,7 @@ import './assets/index.scss'
 import 'materialize-css/dist/js/materialize.min'
 import Vuelidate from "vuelidate";
 import Loader from '@/components/Loader'
+import BigLoader from '@/components/BigLoader'
 import messagePlugin from "./utils/message.plugin";
 Vue.config.productionTip = false
 import firebase from "firebase/app";
@@ -14,6 +15,7 @@ import 'firebase/database';
 
 
 Vue.component("Loader", Loader);
+Vue.component("BigLoader", BigLoader);
 Vue.use(Vuelidate);
 Vue.use(messagePlugin)
 
