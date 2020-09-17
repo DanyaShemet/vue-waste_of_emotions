@@ -1,15 +1,21 @@
 <template>
-  <div class="categories">
+  <div class="categories" ref="categories">
     <BigLoader v-if="loading"/>
-    <div v-else>
-      <h4>Все категории</h4>
-      <div class="categories">
-        <div class="categoty-item" v-for="category in categories" :key="category.id" :class="{deleting: loading}">
-          {{ category.title }}
-          <i class="material-icons">{{ category.icon }}</i>
-          <button @click="deleteCategory" :data-id=category.id>Удалить</button>
-          <button @click="showEditableForm" :data-id=category.id>Редактировать</button>
-<!--          <div class="loader" :id="category.id"> <Loader /></div>-->
+    <div v-else >
+
+      <h4 >Ваши категории</h4>
+
+      <div class="categories-wrap" :class="categories.length % 3 === 0 ? 'sb' : ''">
+        <div class="category-item" v-for="category in categories" :key="category.id">
+          <div class="category-item-user">
+            <i class="material-icons ">{{ category.icon }}</i>
+          </div>
+
+          <p>{{ category.title }}</p>
+
+          <button @click="showEditableForm" class="change" :data-id=category.id ><i class="material-icons">create</i></button>
+          <button @click="deleteCategory" class="delete" :data-id=category.id><i class="material-icons">clear</i></button>
+          <div class="done loader" :id="category.id"> <Loader /></div>
         </div>
       </div>
 
@@ -21,7 +27,7 @@
       </div>
       <CreateCategory @created="addNewCategory" :icons="categoryIcons" v-if="isCreatable" :categories="categories"/>
       <EditCategory v-if="isEditable" :category="editableCategory" :icons="categoryIcons" @updated="updateCategories"
-                    :categories="categories" :key="isRerender"/>
+                    :categories="categories" :key="editableCategory.id"/>
     </div>
 
   </div>
@@ -72,7 +78,6 @@ export default {
     isCreatable: false,
     isRerender: 0,
     loading: false,
-    deleteloading: false
   }),
   async mounted() {
     this.loading= true
@@ -93,6 +98,7 @@ export default {
     },
     async addNewCategory(category) {
       this.categories = await this.$store.dispatch('fetchCategories')
+      //this.categories.push(category)
       this.isCreatable = false
       this.categoryIcons = this.categoryIcons.filter(icon => icon !== category.icon)
     },
@@ -106,10 +112,8 @@ export default {
     },
     async deleteCategory(e) {
       let catId = e.target.dataset.id
-      this.deleteloading = true
       document.querySelector('#'+catId).classList.add('active')
       document.querySelector('#'+catId).classList.remove('done')
-
       const idx = this.categories.findIndex(c => c.id === catId)
       this.categoryIcons.push(this.categories[idx].icon)
       await this.$store.dispatch('deleteCategory', catId)
@@ -121,7 +125,9 @@ export default {
       } else {
         this.categories = []
       }
-      this.deleteloading = false
+      if (this.editableCategory.id === catId){
+        this.isEditable = false
+      }
       document.querySelector('#'+catId).classList.remove('active')
       this.$message('Категория была удалена')
     },
@@ -138,10 +144,18 @@ export default {
       }
     },
     showCreatableForm() {
+      window.scrollBy({
+        top: this.$refs.categories.getBoundingClientRect().top - 100,
+        behavior: 'smooth'
+      })
       this.isCreatable = !this.isCreatable
     },
     hideEditableForm() {
       this.isEditable = false
+      window.scrollBy({
+        top: this.$refs.categories.getBoundingClientRect().top - 100,
+        behavior: 'smooth'
+      })
     }
   },
   name: 'categories',
@@ -151,9 +165,65 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style scoped lang="scss" >
+h4{
+  color: #C0C0C0;
+  text-align: left;
+  font-weight: 500;
+  font-size: 30px;
+}
+.categories-wrap{
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+
+  &.sb{
+    justify-content: space-between;
+  }
+  .category-item{
+    padding: 5px 0;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    width: 33%;
+    .category-item-user{
+      width: 41px;
+      height: 41px;
+      border-radius: 5px;
+      border: 1px solid #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-right: 10px;
+    }
+    p{
+      font-size: 14px;
+      font-weight: 300;
+      margin-right: 15px;
+      text-overflow: ellipsis;
+      width: 60px;
+      overflow: hidden;
+    }
+    .change , .delete{
+      cursor: pointer;s
+      i{
+        font-size: 20px !important;
+      }
+      &:focus{
+        background-color: #fff;
+      }
+
+    }
+
+    .delete{
+      color: #C0C0C0;
+    }
+  }
+}
 .loader{
   position: absolute;
+  margin-top: 0;
 }
 div.active{
   visibility: visible;
@@ -177,6 +247,37 @@ div.done{
   &:focus {
     background-color: #fff;
   }
+}
+
+@media screen and (max-width: 768px){
+  .categories{
+    margin-top: 70px;
+  }
+  h4{
+    text-align: center;
+  }
+  .categories-wrap{
+
+    .category-item{
+      justify-content: center;
+      width: 50%;
+      p{
+        width: 150px;
+      }
+    }
+  }
+
+}
+
+@media screen and (max-width: 550px){
+  .categories-wrap{
+    height: 200px;
+    overflow-y: scroll;
+    .category-item{
+      width: 100%;
+    }
+  }
+
 }
 
 </style>

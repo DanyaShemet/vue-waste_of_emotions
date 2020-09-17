@@ -44,15 +44,56 @@ body{
     margin-bottom: 20px;
 
 }
+.action-emotion{
+    font-weight: 700;
+}
 input.invalid{
     border-bottom: 1px solid #F44336;
     box-shadow: 0 1px 0 0 #F44336;
 }
+.action-button{
+    font-size: 18px;
+    border-radius: 50%;
+    margin: 0 auto;
+    display: block;
+    font-weight: 700;
+    width: 38px;
+    height: 38px;
+    cursor: pointer;
+    &:focus {
+        background-color: #fff;
+    }
+}
 .error{
     color: #F44336;
+}
+input{
+    border-bottom: 2px solid #000 !important;
+    font-weight: 500;
+    font-size: 18px;
+    &::placeholder{
+        font-weight: 400;
+    }
+    &:focus{
+        box-shadow: none !important;
+    }
 }
 
 .icon-item.active{
     background-color: gray;
+}
+
+@media screen and (max-width: 768px){
+    .container{
+        width: 80%;
+    }
+
+}
+
+@media screen and (max-width: 550px){
+    .container{
+        width: 95%;
+    }
+
 }
 

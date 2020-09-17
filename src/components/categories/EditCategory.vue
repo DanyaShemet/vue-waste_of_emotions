@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="edit-category" ref="edit">
     <h4>Редактирование категории {{ $props.category.title }} <i class="material-icons">{{
         $props.category.icon
       }}</i>
@@ -8,7 +8,7 @@
     <Loader v-if="loading"/>
     <form @submit.prevent="updateCategory" v-else>
       <input type="text" placeholder="Введите новое название категории" v-model="title">
-      <p>Выберите новую иконку</p>
+      <h5>Выберите новую иконку</h5>
       <div class="category-buttons">
 
         <button class="icon-item selected active" ref="buttons" type="button" :id="$props.category.icon"
@@ -81,12 +81,15 @@ export default {
   },
 
   mounted() {
-
     this.loading = true
     setTimeout(() => {
       this.getTitle()
       this.loading = false
     }, 400)
+    window.scrollBy({
+      top: this.$refs.edit.getBoundingClientRect().top,
+      behavior: 'smooth'
+    })
   },
   validations: {
     title: {required, minLength: minLength(2)},
@@ -94,9 +97,44 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+h4{
+  color: #C0C0C0;
+  font-size: 20px;
+  text-align: left;
+  font-weight: 500;
+  margin-bottom: 0px;
+}
+h5{
+  font-weight: 400;
+  font-size: 15px;
+  color: #C0C0C0;
+}
+input{
+  border-bottom: 2px solid #000 !important;
+  font-weight: 500;
+  font-size: 18px;
+  &::placeholder{
+    font-weight: 400;
+  }
+}
 .plus-category {
   display: block;
   margin: 0 auto;
+}
+.plus-category {
+  border: 1px solid #000 !important;
+  width: 38px;
+  height: 38px;
+  font-size: 18px;
+
+&:focus {
+   background-color: #fff;
+ }
+}
+@media screen and (max-width: 768px){
+  .edit-category{
+    padding-bottom: 120px;
+  }
 }
 </style>

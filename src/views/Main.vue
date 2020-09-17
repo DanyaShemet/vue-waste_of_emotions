@@ -52,14 +52,20 @@
         <div class="form" @click="(e) => {e.stopPropagation()}">
           <h4>Удаление эмоции</h4>
           <form @submit.prevent="outcomeSubmit">
-            <input type="number" v-model="number">
-            <button type="button" v-for="icon in categories" @click="chooseIcon" ref="buttons" :id="icon.id">
-              <i class="material-icons">{{ icon.icon }}</i>
-              <span class="icon-text">{{ icon.title }}</span>
-            </button>
-            <button>Потвердить</button>
+            <label >Введите кол-во эмоций</label>
+            <input type="number" v-model="number" placeholder="" >
+            <p >Выберите категорию</p>
+            <div class="record-icons">
+              <button type="button" class="record-icon" v-for="icon in categories" @click="chooseIcon" ref="buttons" :id="icon.id">
+                <i class="material-icons">{{ icon.icon }}</i>
+                <span class="icon-text">{{ icon.title }}</span>
+              </button>
+            </div>
+           <button class="plus-record action-button">+</button>
           </form>
-          <button @click="hideForm">Отмена</button>
+          <p v-if="isError" class="error">Напишите количество эмоций и выбери иконку</p>
+          <Loader v-if="addDeleteLoading"/>
+          <button @click="hideForm" class="close action-button">-</button>
         </div>
 
       </div>
@@ -67,15 +73,20 @@
         <div class="form" @click="(e) => {e.stopPropagation()}">
           <h4>Добавление эмоции</h4>
           <form @submit.prevent="incomeSubmit">
-            <input type="number" v-model="number">
-            <button type="button" v-for="icon in categories" @click="chooseIcon" ref="buttons" :id="icon.id">
-              <i class="material-icons">{{ icon.icon }}</i>
-              <span class="icon-text">{{ icon.title }}</span>
-            </button>
-            <button>Потвердить</button>
-
+            <label >Введите кол-во эмоций</label>
+            <input type="number" v-model="number" >
+            <p >Выберите категорию</p>
+            <div class="record-icons">
+              <button type="button" class="record-icon" v-for="icon in categories" @click="chooseIcon" ref="buttons" :id="icon.id">
+                <i class="material-icons">{{ icon.icon }}</i>
+                <span class="icon-text">{{ icon.title }}</span>
+              </button>
+            </div>
+            <button class="plus-record action-button">+</button>
           </form>
-          <button @click="hideForm">Отмена</button>
+          <p v-if="isError" class="error">Напишите количество эмоций и выбери иконку</p>
+          <Loader v-if="addDeleteLoading"/>
+          <button @click="hideForm" class="close action-button">-</button>
         </div>
 
 
@@ -113,7 +124,10 @@ export default {
     sortMenu: false,
     isRerenderOut: null,
     isRerenderIn: null,
-    loading: false
+    loading: false,
+    isError: false,
+    addDeleteLoading: false
+
   }),
   methods: {
     chooseIcon(e) {
@@ -134,12 +148,13 @@ export default {
     },
     hideForm() {
       this.type = false
+      this.isError = false
     },
 
 
     async incomeSubmit() {
-      if (!this.chosenIcon || +this.number === 0) {
-        console.log('Напиши кол-во эмоций и выбери иконку')
+      if (!this.chosenIcon || +this.number <= 0) {
+        this.isError = true
         return
       }
       const record = {
@@ -149,7 +164,9 @@ export default {
         date: new Date().toJSON()
       }
 
+
       try {
+        this.addDeleteLoading = true
         await this.$store.dispatch('createRecord', record)
         const emotions = {
           incomeCount: this.info.incomeCount + +this.number,
@@ -160,6 +177,7 @@ export default {
         this.$message('Запись создана')
         this.records = await this.$store.dispatch('fetchRecords')
         this.isRerenderIn = Date.now()
+        this.addDeleteLoading = false
         this.hideForm()
         this.setup(this.categories)
 
@@ -168,8 +186,8 @@ export default {
     },
 
     async outcomeSubmit() {
-      if (!this.chosenIcon || +this.number === 0) {
-        console.log('Напиши кол-во эмоций и выбери иконку')
+      if (!this.chosenIcon || +this.number <= 0) {
+        this.isError = true
         return
       }
 
@@ -181,6 +199,7 @@ export default {
       }
 
       try {
+        this.addDeleteLoading = true
         await this.$store.dispatch('createRecord', record)
         const emotions = {
           outcomeCount: this.info.outcomeCount + +this.number,
@@ -191,6 +210,7 @@ export default {
         this.$message('Запись создана')
         this.records = await this.$store.dispatch('fetchRecords')
         this.isRerenderOut = Date.now()
+        this.addDeleteLoading = false
         this.hideForm()
         await this.setup(this.categories)
       } catch (e) {
@@ -271,15 +291,62 @@ export default {
   justify-content: center;
 
   .form {
+    width: 30%;
     padding: 10px;
-    height: 300px;
+    position: relative;
     border-radius: 20px;
     border: 2px solid #000;
     background-color: #fff;
-
+    form{
+      margin-bottom: 10px;
+    }
     h4 {
       font-weight: 600;
       font-size: 25px;
+    }
+    label, p{
+      font-size: 15px;
+      color: #C0C0C0;
+      font-weight: 300;
+    }
+    p{
+      margin-bottom: 10px;
+      &.error{
+        font-weight: 500;
+        color: #F44336;
+      }
+    }
+    input{
+      height: 2.5rem;
+      margin-bottom: 15px;
+    }
+    .record-icons{
+      display: flex;
+      flex-wrap: wrap;
+      height: 250px;
+      overflow-y: scroll;
+    }
+    .record-icon{
+      overflow: hidden;
+      padding: 10px 20px;
+      border: 1px solid #000;
+      //height: 100%;
+      //width: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      border-radius: 5px;
+      margin-right: 10px;
+      transition: all .2s;
+      margin-bottom: 10px;
+      &.selected{
+        background-color: #000;
+        color: #fff
+      }
+      &:focus{
+        background-color: #000;
+      }
     }
   }
 }
@@ -417,5 +484,30 @@ h4 {
     }
   }
 }
+.plus-record{
+    margin-top: 10px !important;
+    border: 2px solid #000 !important;
+    margin-bottom: 10px;
+}
 
+.close{
+  position: absolute;
+  top: -20px;
+  right: -20px;
+  background-color: #000;
+  color: #fff;
+  &:focus{
+    background-color: #000 !important;
+  }
+}
+
+
+@media screen and (max-width: 768px){
+  .settings{
+    top: 2%;
+  }
+  .form-emotions .form{
+    width: 90%;
+  }
+}
 </style>

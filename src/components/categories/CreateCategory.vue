@@ -1,10 +1,12 @@
 <template>
-  <div>
+  <div class="create-category" ref="create">
     <h4>Создание категории</h4>
     <form @submit.prevent="submitHandler">
-      <input type="text" placeholder="Введите название категории" v-model="title"
+      <input type="text" placeholder="Введите название категории, например: Семья; Друзья; Работа" v-model="title"
              :class="{invalid: ($v.title.$dirty && !$v.title.required) || ($v.title.$dirty && !$v.title.minLength)}">
+      <h5>Выберите подходящую иконку</h5>
       <div class="category-buttons">
+
         <button class="icon-item" ref="buttons" type="button" @click="chooseIcon" v-for="icon in icons" :id="icon">
           <i class="material-icons">{{ icon }}</i>
         </button>
@@ -81,15 +83,61 @@ export default {
   validations: {
     title: {required, minLength: minLength(2)},
   },
+  mounted() {
+    window.scrollBy({
+      top: this.$refs.create.getBoundingClientRect().top,
+      behavior: 'smooth'
+    })
+  }
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+
+h4{
+  color: #C0C0C0;
+  font-size: 20px;
+  text-align: left;
+  font-weight: 500;
+  margin-bottom: 0px;
+}
+h5{
+  font-weight: 400;
+  font-size: 15px;
+  color: #C0C0C0;
+}
+input{
+  border-bottom: 2px solid #000 !important;
+  font-weight: 500;
+  font-size: 18px;
+  &::placeholder{
+    font-weight: 400;
+  }
+  &:focus{
+    box-shadow: none !important;
+  }
+}
 .plus-category {
   display: block;
   margin: 0 auto;
 }
+.plus-category {
+  border: 1px solid #000 !important;
+  width: 38px;
+  height: 38px;
+  font-size: 18px;
+
+&:focus {
+   background-color: #fff;
+ }
+}
+
 form{
   margin-bottom: 20px;
+}
+@media screen and (max-width: 768px){
+  .create-category{
+    padding-bottom: 100px;
+  }
 }
 </style>

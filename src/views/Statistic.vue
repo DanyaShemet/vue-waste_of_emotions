@@ -1,5 +1,5 @@
 <template>
-  <div class="categories">
+  <div class="statistic">
     <h4>Статистика</h4>
     <!--    <Loader/>-->
     <BigLoader v-if="loading"/>
@@ -92,7 +92,13 @@ export default {
 }
 
 </script>
-<style>
+<style scoped lang="scss">
+
+button{
+  &:focus{
+    background-color: transparent;
+  }
+}
 .loader{
   margin-top: 13px;
 }
@@ -101,5 +107,12 @@ div.active{
 }
 div.done{
   visibility: hidden;
+}
+@media screen and (max-width: 768px){
+  .statistic{
+    margin-top: 70px;
+  }
+
+
 }
 </style>

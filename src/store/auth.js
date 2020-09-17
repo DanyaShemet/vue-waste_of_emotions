@@ -11,7 +11,8 @@ export default {
                     outcomeCount: info.outcomeCount || 0,
                     incomeCount: info.incomeCount || 0,
                     emotions: info.incomeCount - info.outcomeCount || 0,
-                    name: info.name
+                    name: info.name,
+                    sort: info.sort
 
                 })
             }catch (e){
@@ -31,6 +32,7 @@ export default {
                     incomeCount: 0,
                     emotions: 0,
                     name,
+                    sort: 'all'
                 })
             }catch (e){
                 commit ('setError', e)
@@ -46,6 +48,7 @@ export default {
                         incomeCount: info.incomeCount,
                         emotions: info.incomeCount - info.outcomeCount,
                         name,
+                        sort: info.sort
                     })
                 }else{
                     await firebase.database().ref(`/users/${password}/info`).set({
@@ -53,6 +56,7 @@ export default {
                         incomeCount: 0,
                         emotions: 0,
                         name,
+                        sort: 'all'
                     })
                 }
 
