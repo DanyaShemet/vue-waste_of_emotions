@@ -1,100 +1,107 @@
 <template>
-  <div class="main">
-    <BigLoader v-if="loading"/>
-    <div v-else>
-      <div class="settings" @click="showSortMenu" :class="sortMenu ? 'active': ''">
-        <svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path
-              d="M35.09 23.7234C35.1633 23.1734 35.2 22.605 35.2 22C35.2 21.4134 35.1633 20.8267 35.0716 20.2767L38.7933 17.38C39.1233 17.1234 39.215 16.6284 39.0133 16.2617L35.4933 10.175C35.2733 9.77169 34.815 9.64336 34.4116 9.77169L30.03 11.5317C29.1133 10.835 28.1416 10.2484 27.06 9.80836L26.4 5.15169C26.3266 4.71169 25.96 4.40002 25.52 4.40002H18.48C18.04 4.40002 17.6916 4.71169 17.6183 5.15169L16.9583 9.80836C15.8766 10.2484 14.8866 10.8534 13.9883 11.5317L9.60664 9.77169C9.20331 9.62502 8.74498 9.77169 8.52498 10.175L5.02331 16.2617C4.80331 16.6467 4.87664 17.1234 5.24331 17.38L8.96498 20.2767C8.87331 20.8267 8.79998 21.4317 8.79998 22C8.79998 22.5684 8.83664 23.1734 8.92831 23.7234L5.20664 26.62C4.87664 26.8767 4.78498 27.3717 4.98664 27.7384L8.50664 33.825C8.72664 34.2284 9.18498 34.3567 9.58831 34.2284L13.97 32.4684C14.8866 33.165 15.8583 33.7517 16.94 34.1917L17.6 38.8484C17.6916 39.2884 18.04 39.6 18.48 39.6H25.52C25.96 39.6 26.3266 39.2884 26.3816 38.8484L27.0416 34.1917C28.1233 33.7517 29.1133 33.165 30.0116 32.4684L34.3933 34.2284C34.7966 34.375 35.255 34.2284 35.475 33.825L38.995 27.7384C39.215 27.335 39.1233 26.8767 38.775 26.62L35.09 23.7234ZM22 28.6C18.37 28.6 15.4 25.63 15.4 22C15.4 18.37 18.37 15.4 22 15.4C25.63 15.4 28.6 18.37 28.6 22C28.6 25.63 25.63 28.6 22 28.6Z"
-              fill=""/>
-        </svg>
-      </div>
-      <SortMenu :class="{novisible: !sortMenu}"
-                @showBalancePerDay="showBalancePerDay"
-                :sort="info.sort"
-                @showAllBalance="showAllBalance"
-                @hide="showSortMenu"/>
-
-      <h4>Баланс эмоций за {{ info.sort === 'all' ? 'все время' : info.sort === 'day' ? 'день' : '' }}:
-        <strong>{{ info.emotions }}
-          <svg width="22" height="19" viewBox="0 0 22 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <div>
+    <div class="main container">
+      <BigLoader v-if="loading"/>
+      <div v-else>
+        <div class="settings" @click="showSortMenu" :class="sortMenu ? 'active': ''">
+          <svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
-                d="M20.9499 8.0716C21.9021 14.8735 18.9008 19 14.9189 19C10.9369 19 0 12.371 0 8.38902C0 4.40704 6.99176 0 10.9737 0C14.9557 0 20.9499 4.08961 20.9499 8.0716Z"
-                fill="black"/>
-            <path
-                d="M11.7405 4.43046C12.0062 6.3298 11.1687 7.48206 10.0577 7.48206C8.94662 7.48206 5.89502 5.63101 5.89502 4.51909C5.89502 3.40718 7.84586 2.17657 8.95691 2.17657C10.068 2.17657 11.7405 3.31854 11.7405 4.43046Z"
-                fill="white"/>
-            <path
-                d="M10.4031 12.2457C10.5452 13.2603 10.0975 13.8759 9.5035 13.8759C8.90951 13.8759 7.27808 12.8871 7.27808 12.2931C7.27808 11.6991 8.32103 11.0417 8.91501 11.0417C9.509 11.0417 10.4031 11.6518 10.4031 12.2457Z"
-                fill="white"/>
-            <path
-                d="M18.0186 7.02012C19.1425 8.57415 18.9418 9.98438 17.96 10.5045C16.9782 11.0245 13.4151 10.8173 12.8946 9.83468C12.3741 8.85211 13.522 6.85147 14.5038 6.33139C15.4856 5.8113 17.4981 6.03755 18.0186 7.02012Z"
-                fill="white"/>
+                d="M35.09 23.7234C35.1633 23.1734 35.2 22.605 35.2 22C35.2 21.4134 35.1633 20.8267 35.0716 20.2767L38.7933 17.38C39.1233 17.1234 39.215 16.6284 39.0133 16.2617L35.4933 10.175C35.2733 9.77169 34.815 9.64336 34.4116 9.77169L30.03 11.5317C29.1133 10.835 28.1416 10.2484 27.06 9.80836L26.4 5.15169C26.3266 4.71169 25.96 4.40002 25.52 4.40002H18.48C18.04 4.40002 17.6916 4.71169 17.6183 5.15169L16.9583 9.80836C15.8766 10.2484 14.8866 10.8534 13.9883 11.5317L9.60664 9.77169C9.20331 9.62502 8.74498 9.77169 8.52498 10.175L5.02331 16.2617C4.80331 16.6467 4.87664 17.1234 5.24331 17.38L8.96498 20.2767C8.87331 20.8267 8.79998 21.4317 8.79998 22C8.79998 22.5684 8.83664 23.1734 8.92831 23.7234L5.20664 26.62C4.87664 26.8767 4.78498 27.3717 4.98664 27.7384L8.50664 33.825C8.72664 34.2284 9.18498 34.3567 9.58831 34.2284L13.97 32.4684C14.8866 33.165 15.8583 33.7517 16.94 34.1917L17.6 38.8484C17.6916 39.2884 18.04 39.6 18.48 39.6H25.52C25.96 39.6 26.3266 39.2884 26.3816 38.8484L27.0416 34.1917C28.1233 33.7517 29.1133 33.165 30.0116 32.4684L34.3933 34.2284C34.7966 34.375 35.255 34.2284 35.475 33.825L38.995 27.7384C39.215 27.335 39.1233 26.8767 38.775 26.62L35.09 23.7234ZM22 28.6C18.37 28.6 15.4 25.63 15.4 22C15.4 18.37 18.37 15.4 22 15.4C25.63 15.4 28.6 18.37 28.6 22C28.6 25.63 25.63 28.6 22 28.6Z"
+                fill=""/>
           </svg>
-        </strong></h4>
-      <div class="stat">
-        <p class="out">Потрачено: {{ info.outcomeCount }}</p>
-        <p class="inc">Заработано: {{ info.incomeCount }}</p>
-      </div>
-      <div class="history-chart" v-if="records.length && categories.length">
-        <OutcomeChart :categories="categories"  :records="records" :key="isRerenderOut"/>
-        <IncomeChart :categories="categories" :records="records" :key="isRerenderIn"/>
-      </div>
-      <div class="action-buttons" v-if="categories.length">
-        <button @click="showIncomeForm" class="plus-emotion action-emotion">+</button>
-        <button @click="showOutcomeForm" class="minus-emotion action-emotion">-</button>
-      </div>
-      <div v-else class="center">У вас нет ни одной категории
-        <router-link to="/categories">Добавить категории</router-link>
-      </div>
+        </div>
+        <SortMenu :class="{novisible: !sortMenu}"
+                  @showBalancePerDay="showBalancePerDay"
+                  :sort="info.sort"
+                  @showAllBalance="showAllBalance"
+                  @hide="showSortMenu"/>
 
-      <div v-if="type === 'outcome'" class="outcome-form form-emotions" @click="hideForm">
-        <div class="form" @click="(e) => {e.stopPropagation()}">
-          <h4>Удаление эмоции</h4>
-          <form @submit.prevent="outcomeSubmit">
-            <label >Введите кол-во эмоций</label>
-            <input type="number" v-model="number" placeholder="" >
-            <p >Выберите категорию</p>
-            <div class="record-icons">
-              <button type="button" class="record-icon" v-for="icon in categories" @click="chooseIcon" ref="buttons" :id="icon.id">
-                <i class="material-icons">{{ icon.icon }}</i>
-                <span class="icon-text">{{ icon.title }}</span>
-              </button>
-            </div>
-           <button class="plus-record action-button">+</button>
-          </form>
-          <p v-if="isError" class="error">Напишите количество эмоций и выбери иконку</p>
-          <Loader v-if="addDeleteLoading"/>
-          <button @click="hideForm" class="close action-button">-</button>
+        <h4>Баланс эмоций за {{ info.sort === 'all' ? 'все время' : info.sort === 'day' ? 'день' : '' }}:
+          <strong>{{ info.emotions }}
+            <svg width="22" height="19" viewBox="0 0 22 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path
+                  d="M20.9499 8.0716C21.9021 14.8735 18.9008 19 14.9189 19C10.9369 19 0 12.371 0 8.38902C0 4.40704 6.99176 0 10.9737 0C14.9557 0 20.9499 4.08961 20.9499 8.0716Z"
+                  fill="black"/>
+              <path
+                  d="M11.7405 4.43046C12.0062 6.3298 11.1687 7.48206 10.0577 7.48206C8.94662 7.48206 5.89502 5.63101 5.89502 4.51909C5.89502 3.40718 7.84586 2.17657 8.95691 2.17657C10.068 2.17657 11.7405 3.31854 11.7405 4.43046Z"
+                  fill="white"/>
+              <path
+                  d="M10.4031 12.2457C10.5452 13.2603 10.0975 13.8759 9.5035 13.8759C8.90951 13.8759 7.27808 12.8871 7.27808 12.2931C7.27808 11.6991 8.32103 11.0417 8.91501 11.0417C9.509 11.0417 10.4031 11.6518 10.4031 12.2457Z"
+                  fill="white"/>
+              <path
+                  d="M18.0186 7.02012C19.1425 8.57415 18.9418 9.98438 17.96 10.5045C16.9782 11.0245 13.4151 10.8173 12.8946 9.83468C12.3741 8.85211 13.522 6.85147 14.5038 6.33139C15.4856 5.8113 17.4981 6.03755 18.0186 7.02012Z"
+                  fill="white"/>
+            </svg>
+          </strong></h4>
+        <div class="stat">
+          <p class="out">Потрачено: {{ info.outcomeCount }}</p>
+          <p class="inc">Заработано: {{ info.incomeCount }}</p>
         </div>
 
-      </div>
-      <div v-if="type === 'income'" class="income-form form-emotions" @click="hideForm">
-        <div class="form" @click="(e) => {e.stopPropagation()}">
-          <h4>Добавление эмоции</h4>
-          <form @submit.prevent="incomeSubmit">
-            <label >Введите кол-во эмоций</label>
-            <input type="number" v-model="number" >
-            <p >Выберите категорию</p>
-            <div class="record-icons">
-              <button type="button" class="record-icon" v-for="icon in categories" @click="chooseIcon" ref="buttons" :id="icon.id">
-                <i class="material-icons">{{ icon.icon }}</i>
-                <span class="icon-text">{{ icon.title }}</span>
-              </button>
-            </div>
-            <button class="plus-record action-button">+</button>
-          </form>
-          <p v-if="isError" class="error">Напишите количество эмоций и выбери иконку</p>
-          <Loader v-if="addDeleteLoading"/>
-          <button @click="hideForm" class="close action-button">-</button>
+        <div class="action-buttons" v-if="categories.length">
+          <button @click="showIncomeForm" class="plus-emotion action-emotion">+</button>
+          <button @click="showOutcomeForm" class="minus-emotion action-emotion">-</button>
+        </div>
+        <div v-else class="center">У вас нет ни одной категории
+          <router-link to="/categories">Добавить категории</router-link>
         </div>
 
+        <button @click="showHideCharts" class="show-charts" v-if="records.length && categories.length" :class="{show: showCharts}">{{showCharts ? 'Скрыть' : 'Показать'}} график</button>
 
+
+        <div v-if="type === 'outcome'" class="outcome-form form-emotions" @click="hideForm">
+          <div class="form" @click="(e) => {e.stopPropagation()}">
+            <h4>Удаление эмоции</h4>
+            <form @submit.prevent="outcomeSubmit">
+              <label >Введите кол-во эмоций</label>
+              <input type="number" v-model="number" placeholder="" >
+              <p >Выберите категорию</p>
+              <div class="record-icons">
+                <button type="button" class="record-icon" v-for="icon in categories" @click="chooseIcon" ref="buttons" :id="icon.id">
+                  <i class="material-icons">{{ icon.icon }}</i>
+                  <span class="icon-text">{{ icon.title }}</span>
+                </button>
+              </div>
+              <button class="plus-record action-button">+</button>
+            </form>
+            <p v-if="isError" class="error">Напишите количество эмоций и выбери иконку</p>
+            <Loader v-if="addDeleteLoading"/>
+            <button @click="hideForm" class="close action-button">-</button>
+          </div>
+
+        </div>
+        <div v-if="type === 'income'" class="income-form form-emotions" @click="hideForm">
+          <div class="form" @click="(e) => {e.stopPropagation()}">
+            <h4>Добавление эмоции</h4>
+            <form @submit.prevent="incomeSubmit">
+              <label >Введите кол-во эмоций</label>
+              <input type="number" v-model="number" >
+              <p >Выберите категорию</p>
+              <div class="record-icons">
+                <button type="button" class="record-icon" v-for="icon in categories" @click="chooseIcon" ref="buttons" :id="icon.id">
+                  <i class="material-icons">{{ icon.icon }}</i>
+                  <span class="icon-text">{{ icon.title }}</span>
+                </button>
+              </div>
+              <button class="plus-record action-button">+</button>
+            </form>
+            <p v-if="isError" class="error">Напишите количество эмоций и выбери иконку</p>
+            <Loader v-if="addDeleteLoading"/>
+            <button @click="hideForm" class="close action-button">-</button>
+          </div>
+
+
+        </div>
       </div>
+
+
     </div>
-
-
+    <div class="history-chart" v-if="records.length && categories.length" :class="{hide: !showCharts}">
+      <OutcomeChart :categories="categories"  :records="records" :key="isRerenderOut"/>
+      <IncomeChart :categories="categories" :records="records" :key="isRerenderIn"/>
+    </div>
   </div>
+
 </template>
 
 
@@ -126,8 +133,8 @@ export default {
     isRerenderIn: null,
     loading: false,
     isError: false,
-    addDeleteLoading: false
-
+    addDeleteLoading: false,
+    showCharts: false
   }),
   methods: {
     chooseIcon(e) {
@@ -149,6 +156,9 @@ export default {
     hideForm() {
       this.type = false
       this.isError = false
+    },
+    showHideCharts(){
+      this.showCharts = !this.showCharts
     },
 
 
@@ -271,6 +281,15 @@ export default {
     this.records = await this.$store.dispatch('fetchRecords')
     this.categories = await this.$store.dispatch('fetchCategories')
     this.loading = false
+
+    // if (window.innerWidth < 768){
+    //Chart.defaults.global.defaultFontSize = 9;
+    //   console.log('s')
+    // }
+
+    Chart.defaults.global.defaultFontColor = '#000';
+    Chart.defaults.global.defaultFontFamily = "'Montserrat', sans-serif";
+
   },
 
 
@@ -323,15 +342,15 @@ export default {
     .record-icons{
       display: flex;
       flex-wrap: wrap;
-      height: 250px;
+      height: 150px;
+      align-items: flex-start;
       overflow-y: scroll;
     }
     .record-icon{
+      height: 50px;
       overflow: hidden;
       padding: 10px 20px;
       border: 1px solid #000;
-      //height: 100%;
-      //width: 100%;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -460,15 +479,11 @@ h4 {
 }
 
 .history-chart {
-  position: absolute;
   width: 70%;
-  left: 50%;
-  top: 40%;
-  margin-left: -35%;
+  margin: 0 auto;
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
-
   div {
     width: 49%;
     border: 1px solid #C0C0C0;
@@ -501,7 +516,38 @@ h4 {
   }
 }
 
+.show-charts{
+  display: flex;
+  margin: 20px auto;
+  border: 2px solid #000;
+  padding: 6px 50px;
+  border-radius: 5px;
+  font-size: 20px;
+  font-weight: 500;
+  cursor: pointer;
+  &.show{
+    background-color: #000;
+    color: #fff;
+    &:focus{
+      background-color: #000;
+    }
+  }
 
+  &:focus{
+    background-color: #fff;
+  }
+}
+@media screen and (max-width: 1025px){
+  .history-chart {
+    z-index: -1;
+    margin-bottom: 100px;
+    div {
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 10px 10px 20px 10px;
+    }
+  }
+}
 @media screen and (max-width: 768px){
   .settings{
     top: 2%;
@@ -509,5 +555,26 @@ h4 {
   .form-emotions .form{
     width: 90%;
   }
+  .history-chart {
+    margin-bottom: 200px;
+    div {
+      padding: 10px 5px 10px 5px;
+      h5 {
+        margin-bottom: 10px;
+      }
+    }
+  }
+
 }
+
+@media screen and (max-width: 500px){
+  .history-chart {
+    width: 95%;
+    div{
+
+    }
+  }
+}
+
+
 </style>

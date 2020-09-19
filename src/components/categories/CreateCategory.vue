@@ -18,7 +18,7 @@
     <p v-if="isCopy" class="error">Категория с таким именем уже есть, не стоит ее дублировать</p>
     <p v-if="$v.title.$dirty && !$v.title.required" class="error">Введите коректное название категории</p>
     <p v-if="isError.icon" class="error">Выберите иконку</p>
-    <Loader v-if="loading"/>
+    <Loader v-if="loading" class=" mt-10"/>
   </div>
 </template>
 

@@ -1,6 +1,6 @@
 <template>
   <div class="chart-outcome">
-    <h5>Расходы</h5>
+    <h5>Потерянные эмоции</h5>
     <canvas ref="canvas"></canvas>
   </div>
 

@@ -5,7 +5,7 @@
       }}</i>
 
     </h4>
-    <Loader v-if="loading"/>
+    <Loader v-if="loading" style="margin-top: 20px"/>
     <form @submit.prevent="updateCategory" v-else>
       <input type="text" placeholder="Введите новое название категории" v-model="title">
       <h5>Выберите новую иконку</h5>

@@ -1,6 +1,6 @@
 <template>
   <div class="chart-income">
-    <h5>Доходы</h5>
+    <h5>Полученные эмоции</h5>
     <canvas ref="canvas"></canvas>
   </div>
 </template>
@@ -26,6 +26,7 @@ export default {
     },
   },
   mounted() {
+
     let borderColor = []
     let backgroundColor = []
     for (let category of this.categories) {
@@ -51,7 +52,15 @@ export default {
         borderColor: borderColor,
         borderWidth: 1,
         hover: false
-      }]
+      }],
+      options: {
+        legend: {
+          labels : {
+            fontColor: 'red',
+            defaultFontSize: 8
+          }
+        }
+      }
     })
   },
   watch: {

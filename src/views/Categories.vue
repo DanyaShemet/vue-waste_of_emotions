@@ -1,5 +1,5 @@
 <template>
-  <div class="categories" ref="categories">
+  <div class="categories container" ref="categories">
     <BigLoader v-if="loading"/>
     <div v-else >
 
@@ -250,6 +250,7 @@ div.done{
 }
 
 @media screen and (max-width: 768px){
+
   .categories{
     margin-top: 70px;
   }
