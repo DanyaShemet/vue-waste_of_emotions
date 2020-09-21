@@ -1,5 +1,5 @@
 <template>
-  <div class="chart-outcome">
+  <div class="chart-outcome" ref="charts">
     <h5>Потерянные эмоции</h5>
     <canvas ref="canvas"></canvas>
   </div>
@@ -19,6 +19,8 @@ export default {
   },
 
   mounted() {
+
+
 
       let borderColor = []
       let backgroundColor = []
@@ -47,6 +49,9 @@ export default {
           hover: false
         }]
       })
+
+
+
 
   }
 }

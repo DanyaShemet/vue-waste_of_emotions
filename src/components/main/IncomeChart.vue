@@ -26,7 +26,6 @@ export default {
     },
   },
   mounted() {
-
     let borderColor = []
     let backgroundColor = []
     for (let category of this.categories) {
@@ -62,6 +61,7 @@ export default {
         }
       }
     })
+
   },
   watch: {
     chartData () {

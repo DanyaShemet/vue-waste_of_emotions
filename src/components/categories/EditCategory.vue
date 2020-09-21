@@ -76,20 +76,19 @@ export default {
       }
     },
     async getTitle() {
-      this.title = await this.category.title
+      this.title = this.category.title
     },
   },
 
   mounted() {
     this.loading = true
-    setTimeout(() => {
-      this.getTitle()
-      this.loading = false
-    }, 400)
     window.scrollBy({
       top: this.$refs.edit.getBoundingClientRect().top,
       behavior: 'smooth'
     })
+    this.getTitle()
+    this.loading = false
+
   },
   validations: {
     title: {required, minLength: minLength(2)},
@@ -98,42 +97,48 @@ export default {
 </script>
 
 <style scoped lang="scss">
-h4{
+h4 {
   color: #C0C0C0;
   font-size: 20px;
   text-align: left;
   font-weight: 500;
   margin-bottom: 0px;
 }
-h5{
+
+h5 {
   font-weight: 400;
   font-size: 15px;
   color: #C0C0C0;
 }
-input{
+
+input {
   border-bottom: 2px solid #000 !important;
   font-weight: 500;
   font-size: 18px;
-  &::placeholder{
+
+  &::placeholder {
     font-weight: 400;
   }
 }
+
 .plus-category {
   display: block;
   margin: 0 auto;
 }
+
 .plus-category {
   border: 1px solid #000 !important;
   width: 38px;
   height: 38px;
   font-size: 18px;
 
-&:focus {
-   background-color: #fff;
- }
+  &:focus {
+    background-color: #fff;
+  }
 }
-@media screen and (max-width: 768px){
-  .edit-category{
+
+@media screen and (max-width: 768px) {
+  .edit-category {
     padding-bottom: 120px;
   }
 }

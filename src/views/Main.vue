@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="main container">
+    <div class="main container" ref="main">
       <BigLoader v-if="loading"/>
       <div v-else>
         <div class="settings" @click="showSortMenu" :class="sortMenu ? 'active': ''">
@@ -38,7 +38,7 @@
           <p class="inc">Заработано: {{ info.incomeCount }}</p>
         </div>
 
-        <div class="action-buttons" v-if="categories.length">
+        <div class="action-buttons"  v-if="categories.length" ref="charts" >
           <button @click="showIncomeForm" class="plus-emotion action-emotion">+</button>
           <button @click="showOutcomeForm" class="minus-emotion action-emotion">-</button>
         </div>
@@ -96,7 +96,7 @@
 
 
     </div>
-    <div class="history-chart" v-if="records.length && categories.length" :class="{hide: !showCharts}">
+    <div class="history-chart" v-if="records.length && categories.length" :class="{hide: !showCharts}" >
       <OutcomeChart :categories="categories"  :records="records" :key="isRerenderOut"/>
       <IncomeChart :categories="categories" :records="records" :key="isRerenderIn"/>
     </div>
@@ -158,8 +158,18 @@ export default {
       this.isError = false
     },
     showHideCharts(){
+
+      setTimeout(() => {
+        window.scrollBy({
+          top: 400,
+          behavior: 'smooth'
+        })
+      }, 300)
+
       this.showCharts = !this.showCharts
+
     },
+
 
 
     async incomeSubmit() {
@@ -277,15 +287,12 @@ export default {
     },
   },
   async mounted() {
+
     this.loading = true
     this.records = await this.$store.dispatch('fetchRecords')
     this.categories = await this.$store.dispatch('fetchCategories')
     this.loading = false
 
-    // if (window.innerWidth < 768){
-    //Chart.defaults.global.defaultFontSize = 9;
-    //   console.log('s')
-    // }
 
     Chart.defaults.global.defaultFontColor = '#000';
     Chart.defaults.global.defaultFontFamily = "'Montserrat', sans-serif";

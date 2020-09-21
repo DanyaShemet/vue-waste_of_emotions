@@ -26,7 +26,7 @@
         <button @click="hideEditableForm" class="action-emotion minus minus-category" v-if="isEditable">-</button>
       </div>
       <CreateCategory @created="addNewCategory" :icons="categoryIcons" v-if="isCreatable" :categories="categories"/>
-      <EditCategory v-if="isEditable" :category="editableCategory" :icons="categoryIcons" @updated="updateCategories"
+      <EditCategory v-if="isEditable && editableCategory" :category="editableCategory" :icons="categoryIcons" @updated="updateCategories"
                     :categories="categories" :key="editableCategory.id"/>
     </div>
 
