@@ -10,7 +10,6 @@
           <div class="category-item-user">
             <i class="material-icons ">{{ category.icon }}</i>
           </div>
-
           <p>{{ category.title }}</p>
 
           <button @click="showEditableForm" class="change" :data-id=category.id ><i class="material-icons">create</i></button>
@@ -27,7 +26,7 @@
       </div>
       <CreateCategory @created="addNewCategory" :icons="categoryIcons" v-if="isCreatable" :categories="categories"/>
       <EditCategory v-if="isEditable && editableCategory" :category="editableCategory" :icons="categoryIcons" @updated="updateCategories"
-                    :categories="categories" :key="editableCategory.id"/>
+                    :categories="categories" :key="isRerender"/>
     </div>
 
   </div>
@@ -98,7 +97,6 @@ export default {
     },
     async addNewCategory(category) {
       this.categories = await this.$store.dispatch('fetchCategories')
-      //this.categories.push(category)
       this.isCreatable = false
       this.categoryIcons = this.categoryIcons.filter(icon => icon !== category.icon)
     },
@@ -142,6 +140,7 @@ export default {
         title: category.title,
         icon: category.icon,
       }
+      this.isRerender = Date.now()
     },
     showCreatableForm() {
       window.scrollBy({
@@ -253,6 +252,7 @@ div.done{
 
   .categories{
     margin-top: 70px;
+    margin-bottom: 50px;
   }
   h4{
     text-align: center;

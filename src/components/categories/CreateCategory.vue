@@ -3,7 +3,7 @@
     <h4>Создание категории</h4>
     <form @submit.prevent="submitHandler">
       <input type="text" placeholder="Введите название категории, например: Семья; Друзья; Работа" v-model="title"
-             :class="{invalid: ($v.title.$dirty && !$v.title.required) || ($v.title.$dirty && !$v.title.minLength)}">
+             :class="{invalid: ($v.title.$dirty && !$v.title.required) || ($v.title.$dirty && !$v.title.minLength) || ($v.title.$dirty && !$v.title.maxLength)}">
       <h5>Выберите подходящую иконку</h5>
       <div class="category-buttons">
 
@@ -16,14 +16,16 @@
       <button class="plus-category action-emotion" :disabled="loading">+</button>
     </form>
     <p v-if="isCopy" class="error">Категория с таким именем уже есть, не стоит ее дублировать</p>
-    <p v-if="$v.title.$dirty && !$v.title.required" class="error">Введите коректное название категории</p>
-    <p v-if="isError.icon" class="error">Выберите иконку</p>
+    <p v-else-if="$v.title.$dirty && !$v.title.required" class="error">Введите название категории</p>
+    <p v-else-if="$v.title.$dirty && !$v.title.maxLength" class="error">Название категории слишком длинное, максимум 10 символов</p>
+    <p v-else-if="$v.title.$dirty && !$v.title.minLength" class="error">Название категории слишком короткое, минимум 2 символа</p>
+    <p v-else-if="isError.icon" class="error">Выберите иконку</p>
     <Loader v-if="loading" class=" mt-10"/>
   </div>
 </template>
 
 <script>
-import {required, minLength} from "vuelidate/lib/validators";
+import {required, minLength,maxLength} from "vuelidate/lib/validators";
 
 export default {
   props: ['icons', 'categories'],
@@ -81,7 +83,7 @@ export default {
     },
   },
   validations: {
-    title: {required, minLength: minLength(2)},
+    title: {required, minLength: minLength(2), maxLength: maxLength(10)},
   },
   mounted() {
     window.scrollBy({

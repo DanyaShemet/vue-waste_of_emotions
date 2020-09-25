@@ -3,11 +3,11 @@
     <h4>Редактирование категории {{ $props.category.title }} <i class="material-icons">{{
         $props.category.icon
       }}</i>
-
     </h4>
     <Loader v-if="loading" style="margin-top: 20px"/>
     <form @submit.prevent="updateCategory" v-else>
-      <input type="text" placeholder="Введите новое название категории" v-model="title">
+      <input type="text" placeholder="Введите новое название категории" v-model="title"
+             :class="{invalid: ($v.title.$dirty && !$v.title.required) || ($v.title.$dirty && !$v.title.minLength) || ($v.title.$dirty && !$v.title.maxLength)}">
       <h5>Выберите новую иконку</h5>
       <div class="category-buttons">
 
@@ -24,13 +24,15 @@
     </form>
 
     <p v-if="isCopy" class="error">Категория с таким именем уже есть, не стоит ее дублировать</p>
-    <p v-if="isError" class="error">Введите коректное название категории</p>
+    <p v-else-if="$v.title.$dirty && !$v.title.required" class="error">Введите название категории</p>
+    <p v-else-if="$v.title.$dirty && !$v.title.maxLength" class="error">Название категории слишком длинное, максимум 10 символов</p>
+    <p v-else-if="$v.title.$dirty && !$v.title.minLength" class="error">Название категории слишком короткое, минимум 2 символа</p>
 
   </div>
 </template>
 
 <script>
-import {minLength, required} from "vuelidate/lib/validators";
+import {maxLength, minLength, required} from "vuelidate/lib/validators";
 
 export default {
   props: ['category', 'icons', 'categories'],
@@ -75,23 +77,23 @@ export default {
       } catch (e) {
       }
     },
-    async getTitle() {
+    getTitle() {
       this.title = this.category.title
     },
   },
 
   mounted() {
     this.loading = true
+    this.getTitle()
     window.scrollBy({
       top: this.$refs.edit.getBoundingClientRect().top,
       behavior: 'smooth'
     })
-    this.getTitle()
     this.loading = false
 
   },
   validations: {
-    title: {required, minLength: minLength(2)},
+    title: {required, minLength: minLength(2), maxLength: maxLength(10)},
   },
 }
 </script>

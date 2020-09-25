@@ -38,7 +38,7 @@
           <p class="inc">Заработано: {{ info.incomeCount }}</p>
         </div>
 
-        <div class="action-buttons"  v-if="categories.length" ref="charts" >
+        <div class="action-buttons" v-if="categories.length" ref="charts">
           <button @click="showIncomeForm" class="plus-emotion action-emotion">+</button>
           <button @click="showOutcomeForm" class="minus-emotion action-emotion">-</button>
         </div>
@@ -46,18 +46,21 @@
           <router-link to="/categories">Добавить категории</router-link>
         </div>
 
-        <button @click="showHideCharts" class="show-charts" v-if="records.length && categories.length" :class="{show: showCharts}">{{showCharts ? 'Скрыть' : 'Показать'}} график</button>
+        <button @click="showHideCharts" class="show-charts" v-if="records.length && categories.length"
+                :class="{show: showCharts}">{{ showCharts ? 'Скрыть' : 'Показать' }} график
+        </button>
 
 
         <div v-if="type === 'outcome'" class="outcome-form form-emotions" @click="hideForm">
           <div class="form" @click="(e) => {e.stopPropagation()}">
             <h4>Удаление эмоции</h4>
             <form @submit.prevent="outcomeSubmit">
-              <label >Введите кол-во эмоций</label>
-              <input type="number" v-model="number" placeholder="" >
-              <p >Выберите категорию</p>
+              <label>Введите кол-во эмоций</label>
+              <input type="number" v-model="number" placeholder="">
+              <p>Выберите категорию</p>
               <div class="record-icons">
-                <button type="button" class="record-icon" v-for="icon in categories" @click="chooseIcon" ref="buttons" :id="icon.id">
+                <button type="button" class="record-icon" v-for="icon in categories" @click="chooseIcon" ref="buttons"
+                        :id="icon.id">
                   <i class="material-icons">{{ icon.icon }}</i>
                   <span class="icon-text">{{ icon.title }}</span>
                 </button>
@@ -74,11 +77,12 @@
           <div class="form" @click="(e) => {e.stopPropagation()}">
             <h4>Добавление эмоции</h4>
             <form @submit.prevent="incomeSubmit">
-              <label >Введите кол-во эмоций</label>
-              <input type="number" v-model="number" >
-              <p >Выберите категорию</p>
+              <label>Введите кол-во эмоций</label>
+              <input type="number" v-model="number">
+              <p>Выберите категорию</p>
               <div class="record-icons">
-                <button type="button" class="record-icon" v-for="icon in categories" @click="chooseIcon" ref="buttons" :id="icon.id">
+                <button type="button" class="record-icon" v-for="icon in categories" @click="chooseIcon" ref="buttons"
+                        :id="icon.id">
                   <i class="material-icons">{{ icon.icon }}</i>
                   <span class="icon-text">{{ icon.title }}</span>
                 </button>
@@ -96,8 +100,8 @@
 
 
     </div>
-    <div class="history-chart" v-if="records.length && categories.length" :class="{hide: !showCharts}" >
-      <OutcomeChart :categories="categories"  :records="records" :key="isRerenderOut"/>
+    <div class="history-chart" v-if="records.length && categories.length" :class="{hide: !showCharts}">
+      <OutcomeChart :categories="categories" :records="records" :key="isRerenderOut"/>
       <IncomeChart :categories="categories" :records="records" :key="isRerenderIn"/>
     </div>
   </div>
@@ -157,7 +161,7 @@ export default {
       this.type = false
       this.isError = false
     },
-    showHideCharts(){
+    showHideCharts() {
 
       setTimeout(() => {
         window.scrollBy({
@@ -169,7 +173,6 @@ export default {
       this.showCharts = !this.showCharts
 
     },
-
 
 
     async incomeSubmit() {
@@ -259,7 +262,6 @@ export default {
           emotions.emotions -= record.countEmotions
         }
       })
-
       await this.$store.dispatch('updateInfo', emotions)
     },
 
@@ -287,6 +289,7 @@ export default {
     },
   },
   async mounted() {
+
 
     this.loading = true
     this.records = await this.$store.dispatch('fetchRecords')
@@ -323,37 +326,45 @@ export default {
     border-radius: 20px;
     border: 2px solid #000;
     background-color: #fff;
-    form{
+
+    form {
       margin-bottom: 10px;
     }
+
     h4 {
       font-weight: 600;
       font-size: 25px;
     }
-    label, p{
+
+    label, p {
       font-size: 15px;
       color: #C0C0C0;
       font-weight: 300;
     }
-    p{
+
+    p {
       margin-bottom: 10px;
-      &.error{
+
+      &.error {
         font-weight: 500;
         color: #F44336;
       }
     }
-    input{
+
+    input {
       height: 2.5rem;
       margin-bottom: 15px;
     }
-    .record-icons{
+
+    .record-icons {
       display: flex;
       flex-wrap: wrap;
       height: 150px;
       align-items: flex-start;
       overflow-y: scroll;
     }
-    .record-icon{
+
+    .record-icon {
       height: 50px;
       overflow: hidden;
       padding: 10px 20px;
@@ -366,11 +377,13 @@ export default {
       margin-right: 10px;
       transition: all .2s;
       margin-bottom: 10px;
-      &.selected{
+
+      &.selected {
         background-color: #000;
         color: #fff
       }
-      &:focus{
+
+      &:focus {
         background-color: #000;
       }
     }
@@ -475,9 +488,11 @@ h4 {
 
   &.active {
     left: 12%;
-    svg{
+
+    svg {
       fill: #fff;
       transition: all .2s;
+
       &:hover {
         fill: #C0C0C0;
       }
@@ -491,6 +506,7 @@ h4 {
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
+
   div {
     width: 49%;
     border: 1px solid #C0C0C0;
@@ -506,24 +522,26 @@ h4 {
     }
   }
 }
-.plus-record{
-    margin-top: 10px !important;
-    border: 2px solid #000 !important;
-    margin-bottom: 10px;
+
+.plus-record {
+  margin-top: 10px !important;
+  border: 2px solid #000 !important;
+  margin-bottom: 10px;
 }
 
-.close{
+.close {
   position: absolute;
   top: -20px;
   right: -20px;
   background-color: #000;
   color: #fff;
-  &:focus{
+
+  &:focus {
     background-color: #000 !important;
   }
 }
 
-.show-charts{
+.show-charts {
   display: flex;
   margin: 20px auto;
   border: 2px solid #000;
@@ -532,22 +550,26 @@ h4 {
   font-size: 20px;
   font-weight: 500;
   cursor: pointer;
-  &.show{
+
+  &.show {
     background-color: #000;
     color: #fff;
-    &:focus{
+
+    &:focus {
       background-color: #000;
     }
   }
 
-  &:focus{
+  &:focus {
     background-color: #fff;
   }
 }
-@media screen and (max-width: 1025px){
+
+@media screen and (max-width: 1025px) {
   .history-chart {
     z-index: -1;
     margin-bottom: 100px;
+
     div {
       width: 100%;
       margin-bottom: 10px;
@@ -555,17 +577,20 @@ h4 {
     }
   }
 }
-@media screen and (max-width: 768px){
-  .settings{
+
+@media screen and (max-width: 768px) {
+  .settings {
     top: 2%;
   }
-  .form-emotions .form{
+  .form-emotions .form {
     width: 90%;
   }
   .history-chart {
     margin-bottom: 200px;
+
     div {
       padding: 10px 5px 10px 5px;
+
       h5 {
         margin-bottom: 10px;
       }
@@ -574,10 +599,11 @@ h4 {
 
 }
 
-@media screen and (max-width: 500px){
+@media screen and (max-width: 500px) {
   .history-chart {
     width: 95%;
-    div{
+
+    div {
 
     }
   }

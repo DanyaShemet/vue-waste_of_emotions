@@ -1,9 +1,9 @@
 <template>
     <div>
-      <button @click="loginHandler('log')">Login</button>
-      <button @click="loginHandler('reg')">Register</button>
-      <LoginForm  v-if="isLoginForm"/>
-      <RegisterForm  v-if="isRegisterForm"/>
+      <button @click="loginHandler('log')">Войти</button>
+      <button @click="loginHandler('reg')">Регистрация</button>
+      <LoginForm  v-if="isLoginForm"  @hide="hideForm"/>
+      <RegisterForm  v-if="isRegisterForm" @hide="hideForm"/>
     </div>
 </template>
 
@@ -31,7 +31,12 @@ import RegisterForm from "@/components/intro/RegisterForm";
           this.isLoginForm = false
         }
 
+      },
+      hideForm(){
+        this.isLoginForm = false
+        this.isRegisterForm = false
       }
+
     },
   }
 

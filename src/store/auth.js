@@ -42,6 +42,7 @@ export default {
         async loginGoogleUser({dispatch, commit}, {email, password, name}){
             try{
                 const info = (await firebase.database().ref(`/users/${password}/info`).once('value')).val();
+                console.log(info)
                 if (info){
                     await firebase.database().ref(`/users/${password}/info`).set({
                         outcomeCount: info.outcomeCount,
@@ -50,6 +51,7 @@ export default {
                         name,
                         sort: info.sort
                     })
+                    console.log('info')
                 }else{
                     await firebase.database().ref(`/users/${password}/info`).set({
                         outcomeCount: 0,
@@ -58,6 +60,7 @@ export default {
                         name,
                         sort: 'all'
                     })
+                    console.log('info-0')
                 }
 
             }catch (e) {

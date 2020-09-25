@@ -1,10 +1,10 @@
 <template>
   <div class="sort-menu">
-    <button @click="$emit('showBalancePerDay')"  :class="sort2">День</button>
-    <button>Неделя</button>
-    <button>Месяц</button>
-    <button>Год</button>
-    <button @click="$emit('showAllBalance')">Все время</button>
+    <button @click="$emit('showBalancePerDay')" id="day" :class="{active: $props.sort === 'day'}">День</button>
+    <button disabled>Неделя</button>
+    <button disabled>Месяц</button>
+    <button disabled>Год</button>
+    <button @click="$emit('showAllBalance')" id="all" :class="{active: $props.sort === 'all'}">Все время</button>
   </div>
 </template>
 
@@ -14,11 +14,6 @@ export default {
   data: () => ({
 
   }),
-  computed:{
-    sort2(){
-        return this.sort
-    }
-  }
 }
 </script>
 
@@ -48,6 +43,21 @@ export default {
       padding: 10px 0;
       width: 230px;
       margin-bottom: 30px;
+      transition:  all .3s;
+      &:hover{
+        width: 250px;
+      }
+      &:focus{
+        background-color: initial;
+      }
+      &:disabled{
+        color: #ccc;
+        border-color: #ccc;
+      }
+      &.active{
+        background-color: #fff;
+        color: #000;
+      }
     }
   }
 </style>

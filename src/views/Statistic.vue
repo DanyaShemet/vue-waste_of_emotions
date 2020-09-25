@@ -1,7 +1,6 @@
 <template>
   <div class="statistic container">
     <h4>Статистика</h4>
-    <!--    <Loader/>-->
     <BigLoader v-if="loading"/>
     <div v-else-if="records.length">
       <!--      <table>-->
@@ -286,7 +285,7 @@ button {
 
 
 .records-stat__item.active + .records-stat__item-body{
-  max-height: 150px;
+  max-height: 200px;
   padding: 10px 20px;
   border: 1px solid #c0c0c0;
 }

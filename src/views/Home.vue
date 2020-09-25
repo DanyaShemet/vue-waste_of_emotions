@@ -1,7 +1,13 @@
 <template>
     <div>
+      <header>
+        <h1>Подсчитай свои эмоции</h1>
+
         <ButtonsLog/>
-        <button @click="googleHandler">Гугл</button>
+<!--        <button @click="googleHandler">Гугл</button>-->
+      </header>
+
+
     </div>
 
 </template>
@@ -48,7 +54,6 @@
             }
         },
         mounted() {
-            M.updateTextFields();
             if (messages[this.$route.query.message]){
                 this.$message(messages[this.$route.query.message])
             }
@@ -60,3 +65,31 @@
         }
     }
 </script>
+
+<style lang="scss">
+header{
+  padding-top: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  h1{
+    margin: 0;
+    font-size: 50px;
+    font-weight: 600;
+  }
+  button{
+    font-size: 16px;
+    font-weight: 300;
+    cursor: pointer;
+    border-bottom: 1px solid transparent;
+    margin: 0 5px;
+    transition: all .3s;
+    &:focus{
+      background-color: initial;
+    }
+    &:hover{
+      border-bottom: 1px solid #ccc;
+    }
+  }
+}
+</style>
