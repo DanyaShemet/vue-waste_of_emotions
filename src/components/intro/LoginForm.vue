@@ -28,8 +28,18 @@
         </div>
       </div>
 
-      <button class="">Войти</button>
-      <button @click="">Гугл</button>
+      <button class="" type="submit">Войти</button>
+      <p class="or">Или воспользуйтесь Google</p>
+      <button @click="$emit('google')" type="button">
+        <svg xmlns="http://www.w3.org/2000/svg"  version="1.1" id="Capa_1" x="0px" y="0px" width="20" viewBox="0 0 510 510" style="enable-background:new 0 0 510 510;" xml:space="preserve">
+            <g>
+              <g id="glass">
+                <path
+                    d="M286.875,229.5v63.75h150.45c-15.3,89.25-86.7,153-175.95,153c-104.55,0-191.25-86.7-191.25-191.25    s86.7-191.25,191.25-191.25c53.55,0,99.45,22.95,132.6,58.65l45.9-45.9c-45.9-45.9-107.1-76.5-178.5-76.5    c-140.25,0-255,114.75-255,255s114.75,255,255,255s242.25-114.75,242.25-255v-25.5H286.875z"/>
+              </g>
+            </g>
+        </svg>
+      </button>
     </form>
   </div>
 </template>
@@ -81,55 +91,5 @@ export default {
 
 <style lang="scss">
 
-.form {
-  position: fixed;
-  background-color: rgba(0, 0, 0, 0.2);
-  height: 100%;
-  width: 100%;
-  top: 0;
-  left: 0;
-  z-index: 10;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 
-  form {
-    width: 30%;
-    background-color: #fff;
-    border: 3px solid #000;
-    border-radius: 10px;
-    padding: 15px;
-
-    h5{
-      font-weight: 600;
-      margin-bottom: 20px;
-      text-align: center;
-    }
-    button{
-      border: 2px solid #000;
-      font-weight: 600;
-      font-size: 18px;
-      border-radius: 10px;
-      width: 200px;
-      height: 40px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin: 0 auto;
-      &:hover{
-        width: 220px;
-        border: 2px solid #000;
-      }
-    }
-    label{
-      color: #000;
-      &.active{
-        color: #c0c0c0 !important;
-      }
-    }
-    small{
-      color: #C10E0E !important;
-    }
-  }
-}
 </style>
