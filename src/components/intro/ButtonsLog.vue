@@ -63,7 +63,7 @@ button[type='button'] {
   padding: 5px 0;
 }
 
-.form {
+.form-home {
   position: fixed;
   background-color: rgba(0, 0, 0, 0.2);
   height: 100%;
@@ -121,7 +121,7 @@ button[type='button'] {
 }
 
 @media screen and (max-width: 768px){
-  .form {
+  .form-home {
     form {
       width: 60%;
     }
@@ -129,7 +129,7 @@ button[type='button'] {
 }
 
 @media screen and (max-width: 550px){
-  .form {
+  .form-home {
     form {
       width: 90%;
     }

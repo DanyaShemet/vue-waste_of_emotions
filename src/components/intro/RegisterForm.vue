@@ -1,5 +1,5 @@
 <template>
-  <div class="form" @click="hideForm">
+  <div class="form-home" @click="hideForm">
 
     <form class="" @submit.prevent="submitHandler" @click="(e) => {e.stopPropagation()}">
       <h5>Регистрация</h5>
