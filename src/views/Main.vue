@@ -15,7 +15,7 @@
                   :sort="info.sort"
                   @showAllBalance="showAllBalance"
                   @hide="showSortMenu"/>
-
+<!--        <button @click="goBack">Вчера</button>-->
         <h4>Баланс эмоций за {{ info.sort === 'all' ? 'все время' : info.sort === 'day' ? 'день' : '' }}:
           <strong>{{ info.emotions }}
             <svg width="22" height="19" viewBox="0 0 22 19" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -98,11 +98,11 @@
         </div>
       </div>
 
-
     </div>
+
     <div class="history-chart" v-if="records.length && categories.length" :class="{hide: !showCharts}">
-      <OutcomeChart :categories="categories" :records="records" :key="isRerenderOut"/>
-      <IncomeChart :categories="categories" :records="records" :key="isRerenderIn"/>
+      <OutcomeChart :categories="categories" :records="tempRecordsForCharts" :key="isRerenderOut"/>
+      <IncomeChart :categories="categories" :records="tempRecordsForCharts" :key="isRerenderIn"/>
     </div>
   </div>
 
@@ -132,13 +132,15 @@ export default {
     categories: [],
     chosenIcon: null,
     records: [],
+    tempRecordsForCharts: [],
     sortMenu: false,
     isRerenderOut: null,
     isRerenderIn: null,
     loading: false,
     isError: false,
     addDeleteLoading: false,
-    showCharts: false
+    showCharts: false,
+    countedDate: 1,
   }),
   methods: {
     chooseIcon(e) {
@@ -240,6 +242,21 @@ export default {
       }
 
     },
+    dtime_nums(e) {
+      let n = new Date;
+      n.setDate(n.getDate() + e);
+      return n.toLocaleDateString();
+    },
+    goBack(){
+      if (this.info.sort === 'day'){
+
+        let yesterday = this.dtime_nums(-this.countedDate)
+        this.countedDate += 1
+        const neededDate = this.records.filter(record => {
+          return yesterday === new Date(record.date).toLocaleDateString
+        })
+      }
+    },
 
     async showBalancePerDay() {
       this.showSortMenu()
@@ -251,8 +268,11 @@ export default {
         sort: 'day'
       }
       const neededDate = this.records.filter(record => {
-        return new Date().getDate() === new Date(record.date).getDate()
+        return new Date().toLocaleDateString() === new Date(record.date).toLocaleDateString()
       })
+      this.tempRecordsForCharts = neededDate
+      this.isRerenderIn = Date.now()+1
+      this.isRerenderOut = Date.now()
       neededDate.map(record => {
         if (record.type === 'income') {
           emotions.incomeCount += record.countEmotions
@@ -263,6 +283,7 @@ export default {
         }
       })
       await this.$store.dispatch('updateInfo', emotions)
+      this.sortMenu = false
     },
 
     async showAllBalance() {
@@ -274,7 +295,9 @@ export default {
         emotions: 0,
         sort: 'all'
       }
-
+      this.tempRecordsForCharts = this.records
+      this.isRerenderIn = Date.now()+1
+      this.isRerenderOut = Date.now()
       this.records.map(record => {
         if (record.type === 'income') {
           emotions.incomeCount += record.countEmotions
@@ -286,18 +309,17 @@ export default {
       })
 
       await this.$store.dispatch('updateInfo', emotions)
+      this.sortMenu = false
     },
   },
   async mounted() {
-
-
     this.loading = true
     this.records = await this.$store.dispatch('fetchRecords')
+    await this.$store.dispatch('fetchInfo')
+    this.info.sort === 'day' ? await this.showBalancePerDay() : await this.showAllBalance()
     this.categories = await this.$store.dispatch('fetchCategories')
     this.loading = false
-
-
-    Chart.defaults.global.defaultFontColor = '#000';
+    Chart.defaults.global.defaultFontColor = '#000000';
     Chart.defaults.global.defaultFontFamily = "'Montserrat', sans-serif";
 
   },
@@ -583,7 +605,7 @@ h4 {
     top: 2%;
   }
   .form-emotions .form {
-    width: 90%;
+    width: 80%;
   }
   .history-chart {
     margin-bottom: 200px;

@@ -40,9 +40,9 @@
         <small class="helper-text invalid" v-if="$v.name.$dirty && !$v.name.required">Введите имя</small>
       </div>
 
-      <button class="" type="submit">Зарегистрироваться</button>
+      <button class="log" type="submit">Зарегистрироваться</button>
       <p class="or">Или воспользуйтесь Google</p>
-      <button @click="$emit('google')" type="button">
+      <button @click="$emit('google')" type="button" class="google">
         <svg xmlns="http://www.w3.org/2000/svg" version="1.1" id="Capa_1" x="0px" y="0px" width="20" viewBox="0 0 510 510" style="enable-background:new 0 0 510 510;" xml:space="preserve">
 <g>
 	<g id="glass">

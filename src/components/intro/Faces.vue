@@ -79,10 +79,14 @@
       }
     }
   }
+@media screen and (max-width: 420px){
+  svg {
+    width: 100px;
+    height: 100px;
+  }
+}
   @media screen and (max-width: 340px){
     svg {
-      width: 150px;
-      height: 150px;
       &.left{
         left: -10%;
         bottom: 2%;

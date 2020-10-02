@@ -46,11 +46,11 @@ export default {
 
 
 <style lang="scss">
-button[type='submit'] {
+button.log {
   margin-bottom: 5px !important;
 }
 
-button[type='button'] {
+button.google {
   width: 40px !important;
 }
 
@@ -131,7 +131,7 @@ button[type='button'] {
 @media screen and (max-width: 550px){
   .form-home {
     form {
-      width: 90%;
+      width: 80%;
     }
   }
 }
