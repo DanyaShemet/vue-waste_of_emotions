@@ -35,11 +35,11 @@
   height: 100%;
 }
   svg{
-    width: 700px;
-    height: 700px;
+    width: 30%;
+    height: 30%;
     pointer-events: none;
     position: absolute;
-    bottom: -15%;
+    bottom: 0%;
     &.left{
       left: 0;
     }
@@ -51,14 +51,7 @@
       margin-left: -15%;
     }
   }
-  @media screen and (max-width: 1100px){
-    svg {
-      width: 400px;
-      height: 400px;
-      bottom: 0;
-    }
 
-  }
 
   @media screen and (max-width: 768px){
     svg {
