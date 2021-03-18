@@ -19,9 +19,6 @@ export default {
   },
 
   mounted() {
-
-
-
       let borderColor = []
       let backgroundColor = []
       for (let category of this.categories) {

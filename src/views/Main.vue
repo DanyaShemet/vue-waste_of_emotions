@@ -164,14 +164,12 @@ export default {
       this.isError = false
     },
     showHideCharts() {
-
       setTimeout(() => {
         window.scrollBy({
           top: 400,
           behavior: 'smooth'
         })
       }, 300)
-
       this.showCharts = !this.showCharts
 
     },
@@ -201,13 +199,13 @@ export default {
         await this.$store.dispatch('updateInfo', emotions)
         this.$message('Запись создана')
         this.records = await this.$store.dispatch('fetchRecords')
-        this.isRerenderIn = Date.now()
+        this.tempRecordsForCharts = this.records
+        this.isRerenderIn = Date.now()+1
         this.addDeleteLoading = false
         this.hideForm()
         this.setup(this.categories)
 
-      } catch (e) {
-      }
+      } catch (e) {}
     },
 
     async outcomeSubmit() {
@@ -234,6 +232,7 @@ export default {
         await this.$store.dispatch('updateInfo', emotions)
         this.$message('Запись создана')
         this.records = await this.$store.dispatch('fetchRecords')
+        this.tempRecordsForCharts = this.records
         this.isRerenderOut = Date.now()
         this.addDeleteLoading = false
         this.hideForm()
@@ -260,7 +259,6 @@ export default {
 
     async showBalancePerDay() {
       this.showSortMenu()
-      //this.records = await this.$store.dispatch('fetchRecords')
       const emotions = {
         outcomeCount: 0,
         incomeCount: 0,
@@ -288,7 +286,6 @@ export default {
 
     async showAllBalance() {
       this.showSortMenu()
-      //this.records = await this.$store.dispatch('fetchRecords')
       const emotions = {
         outcomeCount: 0,
         incomeCount: 0,

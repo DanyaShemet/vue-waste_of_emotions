@@ -62,7 +62,6 @@ export default {
                     })
                     console.log('info-0')
                 }
-
             }catch (e) {
                 commit('setError', e)
                 throw e
