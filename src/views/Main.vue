@@ -187,10 +187,10 @@ export default {
         date: new Date().toJSON()
       }
 
-
       try {
         this.addDeleteLoading = true
         await this.$store.dispatch('createRecord', record)
+        console.log(record)
         const emotions = {
           incomeCount: this.info.incomeCount + +this.number,
           outcomeCount: this.info.outcomeCount,
@@ -198,9 +198,9 @@ export default {
         }
         await this.$store.dispatch('updateInfo', emotions)
         this.$message('Запись создана')
+
         this.records = await this.$store.dispatch('fetchRecords')
-        this.tempRecordsForCharts = this.records
-        this.isRerenderIn = Date.now()+1
+        this.info.sort === 'day' ? await this.showBalancePerDay() : await this.showAllBalance()
         this.addDeleteLoading = false
         this.hideForm()
         this.setup(this.categories)
@@ -232,8 +232,7 @@ export default {
         await this.$store.dispatch('updateInfo', emotions)
         this.$message('Запись создана')
         this.records = await this.$store.dispatch('fetchRecords')
-        this.tempRecordsForCharts = this.records
-        this.isRerenderOut = Date.now()
+        this.info.sort === 'day' ? await this.showBalancePerDay() : await this.showAllBalance()
         this.addDeleteLoading = false
         this.hideForm()
         await this.setup(this.categories)
@@ -320,8 +319,6 @@ export default {
     Chart.defaults.global.defaultFontFamily = "'Montserrat', sans-serif";
 
   },
-
-
 }
 </script>
 

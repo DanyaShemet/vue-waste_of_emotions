@@ -1,6 +1,6 @@
 <template>
   <div class="statistic container">
-    <h4>Статистика</h4>
+    <h4>Статистика за {{ info.sort === 'all' ? 'все время' : info.sort === 'day' ? 'день' : '' }}</h4>
     <BigLoader v-if="loading"/>
     <div v-else-if="records.length">
       <div class="records-stat">
@@ -72,6 +72,8 @@
 </template>
 
 <script>
+import {mapGetters} from "vuex";
+
 export default {
   name: 'statistic',
   data: () => ({
@@ -128,7 +130,10 @@ export default {
       e.target.classList.toggle('active')
       e.target.parentNode.classList.toggle('active')
     }
-  }
+  },
+  computed: {
+    ...mapGetters(['info']),
+  },
 }
 
 </script>
